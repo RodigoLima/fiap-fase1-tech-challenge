@@ -15,7 +15,7 @@ namespace fiap_fase1_tech_challenge.Repositories
         }
 
         public async Task<IEnumerable<User>> GetAllAsync() => await _context.Users.ToListAsync();
-        public async Task<User?> GetByIdAsync(Guid id) => await _context.Users.FirstOrDefaultAsync(U => U.Id == id);
+        public async Task<User?> GetByIdAsync(int id) => await _context.Users.FirstOrDefaultAsync(U => U.Id == id);
         public async Task<User> CreateAsync(User user)
         {
             _context.Users.Add(user);
@@ -29,13 +29,19 @@ namespace fiap_fase1_tech_challenge.Repositories
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var user = await _context.Users.FirstOrDefaultAsync(U => U.Id == id);
             if (user == null) return false;
             _context.Users.Remove(user);
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
 
 
     }

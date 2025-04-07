@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController : ControllerBase
+public class RoleController : ControllerBase
 {
-    private readonly IUserService _service;
+    private readonly IRoleService _service;
 
-    public UserController(IUserService service)
+    public RoleController(IRoleService service)
     {
         _service = service;
     }
@@ -19,22 +19,22 @@ public class UserController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var user = await _service.GetByIdAsync(id);
-        return user == null ? NotFound() : Ok(user);
+        var role = await _service.GetByIdAsync(id);
+        return role == null ? NotFound() : Ok(role);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] User user)
+    public async Task<IActionResult> Create([FromBody] Role role)
     {
-        var created = await _service.CreateAsync(user);
+        var created = await _service.CreateAsync(role);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] User user)
+    public async Task<IActionResult> Update(int id, [FromBody] Role role)
     {
-        if (id != user.Id) return BadRequest();
-        var updated = await _service.UpdateAsync(user);
+        if (id != role.Id) return BadRequest();
+        var updated = await _service.UpdateAsync(role);
         return updated ? NoContent() : NotFound();
     }
 

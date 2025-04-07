@@ -8,8 +8,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddApplicationServices();
-
 builder.Services.AddDbContext<ApplicationContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -22,6 +20,10 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
     //           .LogTo(Console.WriteLine);
     //}
 });
+
+builder.Services.AddApplicationServices();
+builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.ApplyMigrationsAndSeed();
 
 var app = builder.Build();
 
