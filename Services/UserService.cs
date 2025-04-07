@@ -14,10 +14,27 @@ namespace fiap_fase1_tech_challenge.Services
         }
 
         public Task<IEnumerable<User>> GetAllAsync() => _repository.GetAllAsync();
-        public Task<User?> GetByIdAsync(Guid id) => _repository.GetByIdAsync(id);
-        public Task<User> CreateAsync(User user) => _repository.CreateAsync(user);
+        public Task<User?> GetByIdAsync(int id) => _repository.GetByIdAsync(id);
+        public Task<User> CreateAsync(User user)
+        {
+                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+
+                return _repository.CreateAsync(user);
+        }
         public Task<bool> UpdateAsync(User user) => _repository.UpdateAsync(user);
-        public Task<bool> DeleteAsync(Guid id) => _repository.DeleteAsync(id);
+        public Task<bool> DeleteAsync(int id) => _repository.DeleteAsync(id);
+
+        public async Task<User?> AuthenticateAsync(string email, string password)
+        {
+            var user = await _repository.GetByEmailAsync(email);
+            if (user is null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
+            {
+                await Task.Delay(200); 
+                return null;
+            }
+
+            return user;
+        }
 
     }
 }

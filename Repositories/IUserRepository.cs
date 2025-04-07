@@ -5,9 +5,10 @@ namespace fiap_fase1_tech_challenge.Repositories
     public interface IUserRepository
     {
         Task<IEnumerable<User>> GetAllAsync();
-        Task<User?> GetByIdAsync(Guid id);
+        Task<User?> GetByIdAsync(int id);
         Task<User> CreateAsync(User user);
         Task<bool> UpdateAsync(User user);
-        Task<bool> DeleteAsync(Guid id);
+        Task<bool> DeleteAsync(int id);
+        Task<User?> GetByEmailAsync(string email);
     }
 }

@@ -6,7 +6,7 @@ namespace fiap_fase1_tech_challenge.Models
     {
         [Required]
         [MaxLength(5)]
-        public string Name { get; set; }
-        public ICollection<User> Users { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public ICollection<User> Users { get; set; } = null!;
     }
 }

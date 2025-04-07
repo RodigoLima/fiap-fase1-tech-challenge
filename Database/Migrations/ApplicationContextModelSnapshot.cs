@@ -2,21 +2,18 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using fiap_fase1_tech_challenge.Database;
 
 #nullable disable
 
-namespace fiap_fase1_tech_challenge.Database.Migrations
+namespace fiap_fase1_tech_challenge.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20250406020258_create_game_and_library_tables")]
-    partial class create_game_and_library_tables
+    partial class ApplicationContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,9 +24,14 @@ namespace fiap_fase1_tech_challenge.Database.Migrations
 
             modelBuilder.Entity("fiap_fase1_tech_challenge.Models.Game", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -49,6 +51,9 @@ namespace fiap_fase1_tech_challenge.Database.Migrations
                     b.Property<DateTime>("ReleasedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
                     b.ToTable("Games");
@@ -56,61 +61,109 @@ namespace fiap_fase1_tech_challenge.Database.Migrations
 
             modelBuilder.Entity("fiap_fase1_tech_challenge.Models.GameLibrary", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("GameId")
                         .HasColumnType("uuid");
 
+                    b.Property<int>("GameId1")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
+                    b.Property<int>("UserId1")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("GameId");
+                    b.HasIndex("GameId1");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("GameLibraries");
                 });
 
+            modelBuilder.Entity("fiap_fase1_tech_challenge.Models.Promotion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("DiscountPercent")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("FinalDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("InitialDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("Promotions");
+                });
+
             modelBuilder.Entity("fiap_fase1_tech_challenge.Models.Role", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(5)
                         .HasColumnType("character varying(5)");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("7f3fec04-b8f5-4a9a-b8d7-24e15abb6494"),
-                            Name = "user"
-                        },
-                        new
-                        {
-                            Id = new Guid("abbf75f9-53d8-4c80-9d3a-40cc1dd117ab"),
-                            Name = "admin"
-                        });
                 });
 
             modelBuilder.Entity("fiap_fase1_tech_challenge.Models.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -124,43 +177,47 @@ namespace fiap_fase1_tech_challenge.Database.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("c4fa95b4-1d43-4a79-a63e-5c64856cbdf6"),
-                            Email = "admin@mail.com",
-                            Name = "admin",
-                            Password = "Ad123p@ssword",
-                            RoleId = new Guid("abbf75f9-53d8-4c80-9d3a-40cc1dd117ab")
-                        });
                 });
 
             modelBuilder.Entity("fiap_fase1_tech_challenge.Models.GameLibrary", b =>
                 {
                     b.HasOne("fiap_fase1_tech_challenge.Models.Game", "Game")
                         .WithMany("GameLibrary")
-                        .HasForeignKey("GameId")
+                        .HasForeignKey("GameId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("fiap_fase1_tech_challenge.Models.User", "User")
                         .WithMany("GameLibrary")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Game");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("fiap_fase1_tech_challenge.Models.Promotion", b =>
+                {
+                    b.HasOne("fiap_fase1_tech_challenge.Models.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
                 });
 
             modelBuilder.Entity("fiap_fase1_tech_challenge.Models.User", b =>

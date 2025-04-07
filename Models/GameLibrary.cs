@@ -11,7 +11,7 @@ namespace fiap_fase1_tech_challenge.Models
         [Required]
         public DateTime PurchaseDate { get; set; }
 
-        public virtual User User { get; set; }
-        public virtual Game Game { get; set; }
+        public virtual User User { get; set; } = null!;
+        public virtual Game Game { get; set; } = null!;
     }
 }
