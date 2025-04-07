@@ -2,6 +2,8 @@
 using fiap_fase1_tech_challenge.Database;
 using fiap_fase1_tech_challenge.Repositories;
 using fiap_fase1_tech_challenge.Services;
+using fiap_fase1_tech_challenge.Services.Interfaces;
+using fiap_fase1_tech_challenge.Repositories.Interfaces;
 
 namespace fiap_fase1_tech_challenge.Extensions
 {

@@ -1,6 +1,6 @@
 ﻿using fiap_fase1_tech_challenge.Models;
 
-namespace fiap_fase1_tech_challenge.Repositories
+namespace fiap_fase1_tech_challenge.Repositories.Interfaces
 {
     public interface IRoleRepository
     {
