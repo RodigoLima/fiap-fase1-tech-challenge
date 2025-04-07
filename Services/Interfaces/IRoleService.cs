@@ -1,6 +1,6 @@
 ﻿using fiap_fase1_tech_challenge.Models;
 
-namespace fiap_fase1_tech_challenge.Services
+namespace fiap_fase1_tech_challenge.Services.Interfaces
 {
     public interface IRoleService
     {

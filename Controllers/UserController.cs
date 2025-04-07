@@ -1,5 +1,5 @@
 ﻿using fiap_fase1_tech_challenge.Models;
-using fiap_fase1_tech_challenge.Services;
+using fiap_fase1_tech_challenge.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -24,8 +24,11 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] User user)
+    public async Task<IActionResult> Create([FromBody] UserCreateRequest user)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         var created = await _service.CreateAsync(user);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }

@@ -1,5 +1,6 @@
 ﻿using fiap_fase1_tech_challenge.Database;
 using fiap_fase1_tech_challenge.Models;
+using fiap_fase1_tech_challenge.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace fiap_fase1_tech_challenge.Repositories

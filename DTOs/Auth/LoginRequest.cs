@@ -1,4 +1,4 @@
-﻿namespace fiap_fase1_tech_challenge.Models
+﻿namespace fiap_fase1_tech_challenge.DTOs.Auth
 {
     public class LoginRequest
     {

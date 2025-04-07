@@ -1,5 +1,6 @@
 ﻿using fiap_fase1_tech_challenge.Models;
-using fiap_fase1_tech_challenge.Repositories;
+using fiap_fase1_tech_challenge.Repositories.Interfaces;
+using fiap_fase1_tech_challenge.Services.Interfaces;
 
 namespace fiap_fase1_tech_challenge.Services
 {
