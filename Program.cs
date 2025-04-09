@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerWithJwt();
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
 {
@@ -22,6 +22,7 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 });
 
 builder.Services.AddApplicationServices();
+builder.Services.AddAuthorizationPolicies();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.ApplyMigrationsAndSeed();
 
@@ -34,8 +35,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

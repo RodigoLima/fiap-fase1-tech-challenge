@@ -4,6 +4,7 @@ using fiap_fase1_tech_challenge.Repositories;
 using fiap_fase1_tech_challenge.Services;
 using fiap_fase1_tech_challenge.Services.Interfaces;
 using fiap_fase1_tech_challenge.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace fiap_fase1_tech_challenge.Extensions
 {
@@ -18,6 +19,19 @@ namespace fiap_fase1_tech_challenge.Extensions
             services.AddScoped<ISeeder, RoleSeeder>();
             services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
             services.AddScoped<AuthService>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddAuthorizationPolicies(this IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                // FallbackPolicy: toda rota exige autenticação por padrão
+                options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+            });
 
             return services;
         }
