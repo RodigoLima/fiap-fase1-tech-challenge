@@ -1,7 +1,5 @@
 ﻿using fiap_fase1_tech_challenge.Database;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace fiap_fase1_tech_challenge.Extensions
 {

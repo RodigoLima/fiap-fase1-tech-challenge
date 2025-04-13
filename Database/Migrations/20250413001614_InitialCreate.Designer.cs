@@ -9,10 +9,10 @@ using fiap_fase1_tech_challenge.Database;
 
 #nullable disable
 
-namespace fiap_fase1_tech_challenge.Migrations
+namespace fiap_fase1_tech_challenge.Database.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20250407022434_InitialCreate")]
+    [Migration("20250413001614_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -37,24 +37,26 @@ namespace fiap_fase1_tech_challenge.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Genre")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<double>("Price")
                         .HasColumnType("double precision");
 
-                    b.Property<DateTime>("ReleasedDate")
+                    b.Property<DateTime?>("ReleasedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -73,29 +75,20 @@ namespace fiap_fase1_tech_challenge.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("GameId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("GameId1")
+                    b.Property<int>("GameId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("PurchaseDate")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("UserId1")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GameId1");
+                    b.HasIndex("GameId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("GameLibraries");
                 });
@@ -111,7 +104,7 @@ namespace fiap_fase1_tech_challenge.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("DiscountPercent")
+                    b.Property<int>("DiscountPercentage")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("FinalDate")
@@ -123,7 +116,7 @@ namespace fiap_fase1_tech_challenge.Migrations
                     b.Property<DateTime>("InitialDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -146,10 +139,10 @@ namespace fiap_fase1_tech_challenge.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("character varying(5)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -170,20 +163,23 @@ namespace fiap_fase1_tech_challenge.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -196,14 +192,14 @@ namespace fiap_fase1_tech_challenge.Migrations
             modelBuilder.Entity("fiap_fase1_tech_challenge.Models.GameLibrary", b =>
                 {
                     b.HasOne("fiap_fase1_tech_challenge.Models.Game", "Game")
-                        .WithMany("GameLibrary")
-                        .HasForeignKey("GameId1")
+                        .WithMany("GameLibraries")
+                        .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("fiap_fase1_tech_challenge.Models.User", "User")
-                        .WithMany("GameLibrary")
-                        .HasForeignKey("UserId1")
+                        .WithMany("GameLibraries")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -215,7 +211,7 @@ namespace fiap_fase1_tech_challenge.Migrations
             modelBuilder.Entity("fiap_fase1_tech_challenge.Models.Promotion", b =>
                 {
                     b.HasOne("fiap_fase1_tech_challenge.Models.Game", "Game")
-                        .WithMany()
+                        .WithMany("Promotions")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -228,7 +224,7 @@ namespace fiap_fase1_tech_challenge.Migrations
                     b.HasOne("fiap_fase1_tech_challenge.Models.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Role");
@@ -236,7 +232,9 @@ namespace fiap_fase1_tech_challenge.Migrations
 
             modelBuilder.Entity("fiap_fase1_tech_challenge.Models.Game", b =>
                 {
-                    b.Navigation("GameLibrary");
+                    b.Navigation("GameLibraries");
+
+                    b.Navigation("Promotions");
                 });
 
             modelBuilder.Entity("fiap_fase1_tech_challenge.Models.Role", b =>
@@ -246,7 +244,7 @@ namespace fiap_fase1_tech_challenge.Migrations
 
             modelBuilder.Entity("fiap_fase1_tech_challenge.Models.User", b =>
                 {
-                    b.Navigation("GameLibrary");
+                    b.Navigation("GameLibraries");
                 });
 #pragma warning restore 612, 618
         }
