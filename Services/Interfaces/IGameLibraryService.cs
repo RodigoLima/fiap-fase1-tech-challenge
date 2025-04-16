@@ -1,11 +1,10 @@
 ﻿using fiap_fase1_tech_challenge.Models;
 
-namespace fiap_fase1_tech_challenge.Repositories.Interfaces
+namespace fiap_fase1_tech_challenge.Services.Interfaces
 {
-    public interface IGameLibraryRepository
+    public interface IGameLibraryService
     {
         Task<IEnumerable<GameLibrary>> GetAllAsync();
-        Task<IEnumerable<GameLibrary>> GetAllByUser(int userId);
         Task<GameLibrary?> GetByIdAsync(int id);
         Task<GameLibrary> CreateAsync(GameLibrary gameLibrary);
         Task<bool> UpdateAsync(GameLibrary gameLibrary);

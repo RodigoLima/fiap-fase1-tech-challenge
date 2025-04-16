@@ -12,8 +12,8 @@ using fiap_fase1_tech_challenge.Database;
 namespace fiap_fase1_tech_challenge.Database.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20250413001614_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250416014945_UpdatePasswordFieldTo255")]
+    partial class UpdatePasswordFieldTo255
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -173,8 +173,8 @@ namespace fiap_fase1_tech_challenge.Database.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("integer");

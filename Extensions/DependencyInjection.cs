@@ -14,11 +14,16 @@ namespace fiap_fase1_tech_challenge.Extensions
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
+
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRoleService, RoleService>();
+
             services.AddScoped<IGameRepository, GameRepository>();
-            services.AddScoped<IPromotionRepository, PromotionRepository>();
             services.AddScoped<IGameLibraryRepository, GameLibraryRepository>();
+            services.AddScoped<IGameLibraryService, GameLibraryService>();
+
+            services.AddScoped<IPromotionRepository, PromotionRepository>();
+            
             services.AddScoped<ISeeder, RoleSeeder>();
             services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
             services.AddScoped<AuthService>();
