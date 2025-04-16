@@ -1,7 +1,7 @@
 ﻿using fiap_fase1_tech_challenge.DTOs.Auth;
 using System.Security.Claims;
 
-namespace fiap_fase1_tech_challenge.Repositories.Interfaces
+namespace fiap_fase1_tech_challenge.Services.Interfaces
 {
     public interface IAuthService
     {
