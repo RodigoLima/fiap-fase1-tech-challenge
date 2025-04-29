@@ -15,27 +15,25 @@ namespace fiap_fase1_tech_challenge.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
-            SeedData(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
         }
-        private void SeedData(ModelBuilder modelBuilder)
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var userRoleId = new Guid("7f3fec04-b8f5-4a9a-b8d7-24e15abb6494");
-            var adminRoleId = new Guid("abbf75f9-53d8-4c80-9d3a-40cc1dd117ab");
+            var entries = ChangeTracker.Entries()
+                .Where(e => e.Entity is User && (e.State == EntityState.Added || e.State == EntityState.Modified));
 
-            //roles seed
-            modelBuilder.Entity<Role>().HasData(
-                new Role { Id = userRoleId, Name = "user"},
-                new Role { Id = adminRoleId, Name = "admin"}
-            );
+            foreach (var entityEntry in entries)
+            {
+                ((User)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
 
-            var adminId = new Guid("c4fa95b4-1d43-4a79-a63e-5c64856cbdf6");
+                if (entityEntry.State == EntityState.Added)
+                {
+                    ((User)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
+                }
+            }
 
-            //admin user seed
-            modelBuilder.Entity<User>().HasData(
-                new User {Id = adminId, Name = "admin", Email = "admin@mail.com", Password = "Ad123p@ssword", RoleId = adminRoleId }
-            );
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }

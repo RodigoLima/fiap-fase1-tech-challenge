@@ -10,7 +10,7 @@ Este projeto utiliza o banco de dados PostgreSQL. Para realizar a conexão, deve 
 
 ```json
   "ConnectionStrings": {
-    "PostgresConnection": "User ID=<USUARIO>;Password=<SENHA>;Host=<HOST>;Port=5432;Database=<DATABASE>;Pooling=true;"
+    "DefaultConnection": "User ID=<USUARIO>;Password=<SENHA>;Host=<HOST>;Port=5432;Database=<DATABASE>;Pooling=true;"
   },
 ```
 

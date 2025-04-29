@@ -1,17 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace fiap_fase1_tech_challenge.Models
+﻿namespace fiap_fase1_tech_challenge.Models
 {
     public class Promotion : BaseModel
     {
-        [Required]
-        public int DiscountPercent { get; set; }
-        [Required]
+        public int DiscountPercentage { get; set; } 
         public DateTime InitialDate { get; set; }
-        [Required]
         public DateTime FinalDate { get; set; }
-        [Required]
-        public Guid GameId { get; set; }
+        public int GameId { get; set; }
 
         public virtual Game Game { get; set; }
     }
