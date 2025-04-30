@@ -1,10 +1,12 @@
 ﻿using fiap_fase1_tech_challenge.Database;
 using fiap_fase1_tech_challenge.DTOs.Users;
+using fiap_fase1_tech_challenge.Enums;
 using fiap_fase1_tech_challenge.Models;
 using fiap_fase1_tech_challenge.Repositories;
 using fiap_fase1_tech_challenge.Repositories.Interfaces;
 using fiap_fase1_tech_challenge.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Authentication;
 
 namespace fiap_fase1_tech_challenge.Services
 {
@@ -27,10 +29,12 @@ namespace fiap_fase1_tech_challenge.Services
 
             var role = await _roleRepository.GetByIdAsync(request.RoleId);
 
-            if (role == null)
-                throw new ArgumentException($"Role com ID {request.RoleId} não encontrado.");
+          if (role == null)
+            throw new ArgumentException($"Role com ID {request.RoleId} não encontrado.");
+          else if (role.Id != (int)ERole.Admin)
+            throw new AuthenticationException($"Role com ID {request.RoleId} não tem permissão para executar esta ação.");
 
-            var user = new User
+          var user = new User
             {
                 Name = request.Name,
                 Email = request.Email,

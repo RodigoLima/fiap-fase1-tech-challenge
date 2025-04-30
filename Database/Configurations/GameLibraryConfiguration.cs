@@ -11,7 +11,7 @@ namespace fiap_fase1_tech_challenge.Database.Configurations
             builder.Property(gl => gl.Id).UseIdentityColumn();
             builder.Property(gl => gl.UserId).IsRequired();
             builder.Property(gl => gl.GameId).IsRequired();
-            builder.Property(gl => gl.CreatedAt).IsRequired();
+            builder.Property(gl => gl.CreatedAt).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             builder.HasOne(gl => gl.User).WithMany(u => u.GameLibraries).HasForeignKey(gl => gl.UserId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(gl => gl.Game).WithMany(g => g.GameLibraries).HasForeignKey(gl => gl.GameId).OnDelete(DeleteBehavior.Cascade);

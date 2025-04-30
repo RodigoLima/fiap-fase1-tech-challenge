@@ -31,7 +31,7 @@ namespace fiap_fase1_tech_challenge.Services
 
       if (role == null)
         throw new ArgumentException($"Role com ID {request.RoleId} não encontrado.");
-      else if (role.Id == (int)ERole.Admin)
+      else if (role.Id != (int)ERole.Admin)
         throw new AuthenticationException($"Role com ID {request.RoleId} não tem permissão para executar esta ação.");
 
 

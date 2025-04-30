@@ -1,5 +1,7 @@
 using fiap_fase1_tech_challenge.Database;
 using fiap_fase1_tech_challenge.Extensions;
+using fiap_fase1_tech_challenge.Services.Interfaces;
+using fiap_fase1_tech_challenge.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,11 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
     //           .LogTo(Console.WriteLine);
     //}
 });
+
+#region Services
+builder.Services.AddScoped<IGameService, GameService>();
+#endregion
+
 
 builder.Services.AddApplicationServices();
 builder.Services.AddAuthorizationPolicies();
