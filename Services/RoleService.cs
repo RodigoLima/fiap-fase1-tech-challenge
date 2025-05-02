@@ -1,4 +1,6 @@
-﻿using fiap_fase1_tech_challenge.Models;
+﻿using fiap_fase1_tech_challenge.DTOs.Role;
+using fiap_fase1_tech_challenge.Models;
+using fiap_fase1_tech_challenge.Repositories;
 using fiap_fase1_tech_challenge.Repositories.Interfaces;
 using fiap_fase1_tech_challenge.Services.Interfaces;
 
@@ -13,8 +15,29 @@ namespace fiap_fase1_tech_challenge.Services
         }
         public Task<IEnumerable<Role>> GetAllAsync() => _roleRepository.GetAllAsync();
         public Task<Role?> GetByIdAsync(int id) => _roleRepository.GetByIdAsync(id);
-        public Task<Role> CreateAsync(Role role) => _roleRepository.CreateAsync(role);
-        public Task<bool> UpdateAsync(Role role) => _roleRepository.UpdateAsync(role);
+        public Task<Role> CreateAsync(RoleCreateRequest role)
+        {
+            var newRole = new Role
+            {
+                Name = role.Name
+            };
+            return _roleRepository.CreateAsync(newRole);
+        }
+        
+        public async Task<bool> UpdateAsync(int id,RoleUpdateRequest request)
+        {
+
+            var role = await _roleRepository.GetByIdAsync(id);
+            if (role == null)
+                return false;
+
+            role.Name = request.Name;
+
+            await _roleRepository.UpdateAsync(role);
+
+            return true;
+
+        }
         public Task<bool> DeleteAsync(int id) => _roleRepository.DeleteAsync(id);
     }
 }

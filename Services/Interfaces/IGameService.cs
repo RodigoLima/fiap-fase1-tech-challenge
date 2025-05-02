@@ -1,4 +1,5 @@
-﻿using fiap_fase1_tech_challenge.Models;
+﻿using fiap_fase1_tech_challenge.DTOs.Game;
+using fiap_fase1_tech_challenge.Models;
 
 namespace fiap_fase1_tech_challenge.Services.Interfaces
 {
@@ -6,8 +7,8 @@ namespace fiap_fase1_tech_challenge.Services.Interfaces
     {
         Task<IEnumerable<Game>> GetAllAsync();
         Task<Game?> GetByIdAsync(int id);
-        Task<Game> CreateAsync(Game gameLibrary);
-        Task<bool> UpdateAsync(Game gameLibrary);
+        Task<Game> CreateAsync(GameCreateRequest game);
+        Task<bool> UpdateAsync(int id,GameUpdateRequest game);
         Task<bool> DeleteAsync(int id);
     }
 }

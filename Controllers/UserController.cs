@@ -34,11 +34,16 @@ public class UserController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] User user)
+    public async Task<IActionResult> Update(int id, [FromBody] UserUpdateRequest user)
     {
-        if (id != user.Id) return BadRequest();
-        var updated = await _service.UpdateAsync(user);
-        return updated ? NoContent() : NotFound();
+        if (user == null)
+            return BadRequest("Dados inválidos.");
+
+        var updated = await _service.UpdateAsync(id, user);
+
+        return updated
+            ? NoContent()
+            : NotFound();
     }
 
     [HttpDelete("{id}")]

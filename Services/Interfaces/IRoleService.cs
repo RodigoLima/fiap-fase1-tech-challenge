@@ -1,4 +1,5 @@
-﻿using fiap_fase1_tech_challenge.Models;
+﻿using fiap_fase1_tech_challenge.DTOs.Role;
+using fiap_fase1_tech_challenge.Models;
 
 namespace fiap_fase1_tech_challenge.Services.Interfaces
 {
@@ -6,8 +7,8 @@ namespace fiap_fase1_tech_challenge.Services.Interfaces
     {
         Task<IEnumerable<Role>> GetAllAsync();
         Task<Role?> GetByIdAsync(int id);
-        Task<Role> CreateAsync(Role role);
-        Task<bool> UpdateAsync(Role role);
+        Task<Role> CreateAsync(RoleCreateRequest role);
+        Task<bool> UpdateAsync(int id,RoleUpdateRequest role);
         Task<bool> DeleteAsync(int id);
     }
 }

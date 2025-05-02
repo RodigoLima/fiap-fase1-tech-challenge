@@ -1,4 +1,5 @@
-﻿using fiap_fase1_tech_challenge.Models;
+﻿using fiap_fase1_tech_challenge.DTOs.Game;
+using fiap_fase1_tech_challenge.Models;
 using fiap_fase1_tech_challenge.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,18 +23,24 @@ namespace fiap_fase1_tech_challenge.Controllers
                 return game == null ? NotFound() : Ok(game);
             }
             [HttpPost]
-            public async Task<IActionResult> Create([FromBody] Game game)
+            public async Task<IActionResult> Create([FromBody] GameCreateRequest game)
             {
                 var created = await _service.CreateAsync(game);
                 return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
             }
             [HttpPut("{id}")]
-            public async Task<IActionResult> Update(int id, [FromBody] Game game)
+            public async Task<IActionResult> Update(int id, [FromBody] GameUpdateRequest game)
             {
-                if (id != game.Id) return BadRequest();
-                var updated = await _service.UpdateAsync(game);
-                return updated ? NoContent() : NotFound();
-            }
+
+            if (game == null)
+                return BadRequest("Dados inválidos.");
+
+            var updated = await _service.UpdateAsync(id, game);
+
+            return updated
+                ? NoContent()
+                : NotFound();
+        }
             [HttpDelete("{id}")]
             public async Task<IActionResult> Delete(int id)
             {

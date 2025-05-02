@@ -5,6 +5,7 @@ using fiap_fase1_tech_challenge.Services;
 using fiap_fase1_tech_challenge.Services.Interfaces;
 using fiap_fase1_tech_challenge.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using fiap_fase1_tech_challenge.Security;
 
 namespace fiap_fase1_tech_challenge.Extensions
 {
@@ -14,6 +15,8 @@ namespace fiap_fase1_tech_challenge.Extensions
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
+
+            services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
 
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRoleService, RoleService>();

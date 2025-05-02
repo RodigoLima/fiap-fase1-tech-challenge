@@ -5,6 +5,7 @@ using fiap_fase1_tech_challenge.Repositories;
 using fiap_fase1_tech_challenge.Repositories.Interfaces;
 using fiap_fase1_tech_challenge.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace fiap_fase1_tech_challenge.Services
 {
@@ -13,11 +14,13 @@ namespace fiap_fase1_tech_challenge.Services
 
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly IPasswordHasher _hasher;
 
-        public UserService(IUserRepository userRepository, IRoleRepository roleRepository)
+        public UserService(IUserRepository userRepository, IRoleRepository roleRepository, IPasswordHasher hasher)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _hasher = hasher;
         }
 
         public Task<IEnumerable<User>> GetAllAsync() => _userRepository.GetAllAsync();
@@ -34,7 +37,7 @@ namespace fiap_fase1_tech_challenge.Services
             {
                 Name = request.Name,
                 Email = request.Email,
-                Password = HashPassword(request.Password),
+                Password = _hasher.Hash(request.Password),
                 RoleId = role.Id
             };
 
@@ -50,12 +53,38 @@ namespace fiap_fase1_tech_challenge.Services
 
         }
 
-        private string HashPassword(string password)
+        public async Task<bool> UpdateAsync(int id, UserUpdateRequest request)
         {
-            return BCrypt.Net.BCrypt.HashPassword(password);
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null)
+                return false;
 
+            var role = await _roleRepository.GetByIdAsync(request.RoleId);
+            if (role == null)
+                throw new ArgumentException($"Role com ID {request.RoleId} não encontrado.");
+
+            // Atualização de senha, se necessário
+            if (!string.IsNullOrWhiteSpace(request.NewPassword))
+            {
+                if (string.IsNullOrWhiteSpace(request.OldPassword))
+                    throw new ArgumentException("Senha antiga é obrigatória.");
+
+                var senhaCorreta = _hasher.Verify(request.OldPassword, user.Password);
+                if (!senhaCorreta)
+                    throw new UnauthorizedAccessException("Senha antiga incorreta.");
+
+                user.Password = _hasher.Hash(request.NewPassword);
+            }
+
+            // Atualiza demais propriedades
+            user.Name = request.Name;
+            user.Email = request.Email;
+            user.RoleId = role.Id;
+
+            await _userRepository.UpdateAsync(user);
+            return true;
         }
-        public Task<bool> UpdateAsync(User user) => _userRepository.UpdateAsync(user);
+
         public Task<bool> DeleteAsync(int id) => _userRepository.DeleteAsync(id);
 
         public async Task<User?> AuthenticateAsync(string email, string password)
