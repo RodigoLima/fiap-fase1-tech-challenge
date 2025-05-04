@@ -15,7 +15,20 @@ namespace fiap_fase1_tech_challenge.Services
             _gameLibraryRepository = gameLibraryRepository;
         }
         public Task<IEnumerable<GameLibrary>> GetAllAsync() => _gameLibraryRepository.GetAllAsync();
-        public Task<GameLibrary?> GetByIdAsync(int id) => _gameLibraryRepository.GetByIdAsync(id);
+        public async Task<GameLibraryResponse?> GetByIdAsync(int id)
+        {
+            var gameLibrary = await _gameLibraryRepository.GetByIdAsync(id);
+            if (gameLibrary == null)
+            {
+                return null;
+            }
+
+            return new GameLibraryResponse
+            {
+                UserId = gameLibrary.UserId,
+                GameId = gameLibrary.GameId
+            };
+        }
         public Task<GameLibrary> CreateAsync(GameLibraryCreateRequest gameLibrary)
         {
             var newGameLibrary = new GameLibrary
