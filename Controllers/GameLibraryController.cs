@@ -1,4 +1,5 @@
-﻿using fiap_fase1_tech_challenge.Models;
+﻿using fiap_fase1_tech_challenge.DTOs.GameLibrary;
+using fiap_fase1_tech_challenge.Models;
 using fiap_fase1_tech_challenge.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,18 +27,24 @@ namespace fiap_fase1_tech_challenge.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] GameLibrary gameLibrary)
+        public async Task<IActionResult> Create([FromBody] GameLibraryCreateRequest gameLibrary)
         {
             var created = await _service.CreateAsync(gameLibrary);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] GameLibrary gameLibrary)
+        public async Task<IActionResult> Update(int id, [FromBody] GameLibraryUpdateRequest gameLibrary)
         {
-            if (id != gameLibrary.Id) return BadRequest();
-            var updated = await _service.UpdateAsync(gameLibrary);
-            return updated ? NoContent() : NotFound();
+
+            if (gameLibrary == null)
+                return BadRequest("Dados inválidos.");
+
+            var updated = await _service.UpdateAsync(id, gameLibrary);
+
+            return updated
+                ? NoContent()
+                : NotFound();
         }
 
         [HttpDelete("{id}")]

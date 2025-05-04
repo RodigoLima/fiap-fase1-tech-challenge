@@ -24,16 +24,16 @@ namespace fiap_fase1_tech_challenge.Services
             return _roleRepository.CreateAsync(newRole);
         }
         
-        public async Task<bool> UpdateAsync(int id,RoleUpdateRequest request)
+        public async Task<bool> UpdateAsync(int id,RoleUpdateRequest role)
         {
 
-            var role = await _roleRepository.GetByIdAsync(id);
-            if (role == null)
+            var newRole = await _roleRepository.GetByIdAsync(id);
+            if (newRole == null)
                 return false;
 
-            role.Name = request.Name;
+            newRole.Name = role.Name;
 
-            await _roleRepository.UpdateAsync(role);
+            await _roleRepository.UpdateAsync(newRole);
 
             return true;
 

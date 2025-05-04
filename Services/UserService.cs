@@ -25,63 +25,61 @@ namespace fiap_fase1_tech_challenge.Services
 
         public Task<IEnumerable<User>> GetAllAsync() => _userRepository.GetAllAsync();
         public Task<User?> GetByIdAsync(int id) => _userRepository.GetByIdAsync(id);
-        public async Task<UserResponse> CreateAsync(UserCreateRequest request)
+        public async Task<UserResponse> CreateAsync(UserCreateRequest user)
         {
-
-            var role = await _roleRepository.GetByIdAsync(request.RoleId);
+            var role = await _roleRepository.GetByIdAsync(user.RoleId);
 
             if (role == null)
-                throw new ArgumentException($"Role com ID {request.RoleId} não encontrado.");
+                throw new ArgumentException($"Role com ID {user.RoleId} não encontrado.");
 
-            var user = new User
+            var newUser = new User
             {
-                Name = request.Name,
-                Email = request.Email,
-                Password = _hasher.Hash(request.Password),
+                Name = user.Name,
+                Email = user.Email,
+                Password = _hasher.Hash(user.Password),
                 RoleId = role.Id
             };
 
-            await _userRepository.CreateAsync(user);
+            await _userRepository.CreateAsync(newUser);
 
             return new UserResponse
             {
-                Id = user.Id,
+                Id = newUser.Id, 
                 Name = user.Name,
                 Email = user.Email,
                 RoleName = role.Name
             };
-
         }
 
-        public async Task<bool> UpdateAsync(int id, UserUpdateRequest request)
+        public async Task<bool> UpdateAsync(int id, UserUpdateRequest user)
         {
-            var user = await _userRepository.GetByIdAsync(id);
-            if (user == null)
+            var newUser = await _userRepository.GetByIdAsync(id);
+            if (newUser == null)
                 return false;
 
-            var role = await _roleRepository.GetByIdAsync(request.RoleId);
+            var role = await _roleRepository.GetByIdAsync(user.RoleId);
             if (role == null)
-                throw new ArgumentException($"Role com ID {request.RoleId} não encontrado.");
+                throw new ArgumentException($"Role com ID {user.RoleId} não encontrado.");
 
             // Atualização de senha, se necessário
-            if (!string.IsNullOrWhiteSpace(request.NewPassword))
+            if (!string.IsNullOrWhiteSpace(user.NewPassword))
             {
-                if (string.IsNullOrWhiteSpace(request.OldPassword))
+                if (string.IsNullOrWhiteSpace(user.OldPassword))
                     throw new ArgumentException("Senha antiga é obrigatória.");
 
-                var senhaCorreta = _hasher.Verify(request.OldPassword, user.Password);
+                var senhaCorreta = _hasher.Verify(user.OldPassword, newUser.Password);
                 if (!senhaCorreta)
                     throw new UnauthorizedAccessException("Senha antiga incorreta.");
 
-                user.Password = _hasher.Hash(request.NewPassword);
+                newUser.Password = _hasher.Hash(user.NewPassword);
             }
 
             // Atualiza demais propriedades
-            user.Name = request.Name;
-            user.Email = request.Email;
-            user.RoleId = role.Id;
+            newUser.Name = user.Name;
+            newUser.Email = user.Email;
+            newUser.RoleId = role.Id;
 
-            await _userRepository.UpdateAsync(user);
+            await _userRepository.UpdateAsync(newUser);
             return true;
         }
 

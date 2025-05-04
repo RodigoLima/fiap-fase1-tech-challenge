@@ -27,21 +27,21 @@ namespace fiap_fase1_tech_challenge.Services
             };
             return _gameRepository.CreateAsync(newGame);
         }
-        public async Task<bool> UpdateAsync(int id,GameUpdateRequest request)
+        public async Task<bool> UpdateAsync(int id,GameUpdateRequest game)
         {
-            var game = await _gameRepository.GetByIdAsync(id);
-            if (game == null)
+            var newGame = await _gameRepository.GetByIdAsync(id);
+            if (newGame == null)
                 return false;
 
-            game.Name = request.Name;
-            game.Description = request.Description;
-            game.Price = request.Price;
-            if (request.ReleasedDate != null)
-                game.ReleasedDate = request.ReleasedDate;
-            game.Genre = request.Genre;
+            newGame.Name = game.Name;
+            newGame.Description = game.Description;
+            newGame.Price = game.Price;
+            if (game.ReleasedDate != null)
+                newGame.ReleasedDate = game.ReleasedDate;
+            newGame.Genre = game.Genre;
 
 
-            await _gameRepository.UpdateAsync(game);
+            await _gameRepository.UpdateAsync(newGame);
 
             return true;
         }
