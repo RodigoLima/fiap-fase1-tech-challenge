@@ -9,18 +9,25 @@ namespace fiap_fase1_tech_challenge.Services
     public class RoleService: IRoleService
     {
         private readonly IRoleRepository _roleRepository;
-        public RoleService(IRoleRepository respository)
+        private readonly ILogger<RoleService> _logger;
+
+        public RoleService(IRoleRepository respository, ILogger<RoleService> logger)
         {
             _roleRepository = respository;
+            _logger = logger;
         }
         public Task<IEnumerable<Role>> GetAllAsync() => _roleRepository.GetAllAsync();
         public Task<Role?> GetByIdAsync(int id) => _roleRepository.GetByIdAsync(id);
         public Task<Role> CreateAsync(RoleCreateRequest role)
         {
+            _logger.LogInformation("Iniciando criação do Role");
+
             var newRole = new Role
             {
                 Name = role.Name
             };
+
+            _logger.LogInformation("Criando o Role {Role}", newRole.Name);
             return _roleRepository.CreateAsync(newRole);
         }
         
