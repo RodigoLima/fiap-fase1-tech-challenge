@@ -1,5 +1,6 @@
 ﻿using fiap_fase1_tech_challenge.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 public class ApplicationContext : DbContext
 {

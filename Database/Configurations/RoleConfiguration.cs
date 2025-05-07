@@ -10,8 +10,8 @@ namespace fiap_fase1_tech_challenge.Database.Configurations
         {
             builder.Property(r => r.Id).UseIdentityColumn();
             builder.Property(r => r.Name).IsRequired().HasMaxLength(50);
-            builder.Property(r => r.CreatedAt).IsRequired();
-            builder.HasMany(r => r.Users)
+            builder.Property(r => r.CreatedAt).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");
+      builder.HasMany(r => r.Users)
                 .WithOne(u => u.Role)
                 .HasForeignKey(u => u.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);

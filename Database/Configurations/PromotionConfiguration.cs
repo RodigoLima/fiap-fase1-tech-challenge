@@ -13,7 +13,7 @@ namespace fiap_fase1_tech_challenge.Database.Configurations
             builder.Property(p => p.InitialDate).IsRequired();
             builder.Property(p => p.FinalDate).IsRequired();
             builder.Property(p => p.GameId).IsRequired();
-            builder.Property(p => p.CreatedAt).IsRequired();
+            builder.Property(p => p.CreatedAt).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             builder.HasOne(p => p.Game)
                 .WithMany(g => g.Promotions)

@@ -13,7 +13,7 @@ namespace fiap_fase1_tech_challenge.Database.Configurations
             builder.Property(g => g.Description).HasMaxLength(200);
             builder.Property(g => g.Price).IsRequired();
             builder.Property(g => g.Genre).HasMaxLength(20).IsRequired();
-            builder.Property(g => g.CreatedAt).IsRequired();
+            builder.Property(g => g.CreatedAt).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             builder.HasMany(g => g.GameLibraries)
                 .WithOne(gl => gl.Game)
