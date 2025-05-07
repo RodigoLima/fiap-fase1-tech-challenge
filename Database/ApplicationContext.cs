@@ -1,39 +1,36 @@
 ﻿using fiap_fase1_tech_challenge.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace fiap_fase1_tech_challenge.Database
+public class ApplicationContext : DbContext
 {
-    public class ApplicationContext : DbContext
+    public DbSet<User> Users { get; set; }
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<Game> Games { get; set; }
+    public DbSet<GameLibrary> GameLibraries { get; set; }
+    public DbSet<Promotion> Promotions { get; set; }
+
+    public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<Game> Games { get; set; }
-        public DbSet<GameLibrary> GameLibraries { get; set; }
-        public DbSet<Promotion> Promotions { get; set; }
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
+    }
 
-        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var entries = ChangeTracker.Entries()
+            .Where(e => e.Entity is User && (e.State == EntityState.Added || e.State == EntityState.Modified));
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        foreach (var entityEntry in entries)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
-        }
+            ((User)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            var entries = ChangeTracker.Entries()
-                .Where(e => e.Entity is User && (e.State == EntityState.Added || e.State == EntityState.Modified));
-
-            foreach (var entityEntry in entries)
+            if (entityEntry.State == EntityState.Added)
             {
-                ((User)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
-
-                if (entityEntry.State == EntityState.Added)
-                {
-                    ((User)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
-                }
+                ((User)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
             }
-
-            return base.SaveChangesAsync(cancellationToken);
         }
+
+        return base.SaveChangesAsync(cancellationToken);
     }
 }

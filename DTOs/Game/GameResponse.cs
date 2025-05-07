@@ -2,18 +2,13 @@
 
 namespace fiap_fase1_tech_challenge.DTOs.Game
 {
-  public class GameCreateRequest
+  public class GameResponse
   {
-    [Required, MaxLength(50)]
+    public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
-    [MaxLength(200)]
     public string? Description { get; set; } = string.Empty;
-    [Required]
     public double Price { get; set; }
     public DateTime? ReleasedDate { get; set; }
-    [Required]
     public string Genre { get; set; } = string.Empty;
-    [Required]
-    public int RoleId { get; set; }
   }
 }

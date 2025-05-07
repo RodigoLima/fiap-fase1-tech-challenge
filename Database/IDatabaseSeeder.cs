@@ -1,9 +1,6 @@
-﻿using System;
-
-namespace fiap_fase1_tech_challenge.Database
+﻿
+public interface IDatabaseSeeder
 {
-    public interface IDatabaseSeeder
-    {
-        void SeedDatabase(ApplicationContext context);
-    }
+    void SeedDatabase(ApplicationContext context);
 }
+

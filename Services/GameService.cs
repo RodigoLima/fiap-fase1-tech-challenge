@@ -1,52 +1,79 @@
-﻿using fiap_fase1_tech_challenge.DTOs.Game;
+﻿using fiap_fase1_tech_challenge.Database;
+using fiap_fase1_tech_challenge.DTOs.Game;
+using fiap_fase1_tech_challenge.Enums;
 using fiap_fase1_tech_challenge.Models;
 using fiap_fase1_tech_challenge.Repositories;
 using fiap_fase1_tech_challenge.Repositories.Interfaces;
 using fiap_fase1_tech_challenge.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Authentication;
 
 namespace fiap_fase1_tech_challenge.Services
 {
-    public class GameService: IGameService 
+    public class GameService : IGameService
     {
-        private readonly IGameRepository  _gameRepository;
-        public GameService(IGameRepository gameRepository)
+
+        private readonly IGameRepository _gameRepository;
+        private readonly IRoleRepository _roleRepository;
+
+        public GameService(IGameRepository GameRepository, IRoleRepository roleRepository)
         {
-            _gameRepository = gameRepository;
+            _gameRepository = GameRepository;
+            _roleRepository = roleRepository;
         }
+
         public Task<IEnumerable<Game>> GetAllAsync() => _gameRepository.GetAllAsync();
         public Task<Game?> GetByIdAsync(int id) => _gameRepository.GetByIdAsync(id);
-        public Task<Game> CreateAsync(GameCreateRequest game)
+        public async Task<GameResponse> CreateAsync(GameCreateRequest request)
         {
+            var role = await _roleRepository.GetByIdAsync(request.RoleId);
+
+            if (role == null)
+                throw new ArgumentException($"Role com ID {request.RoleId} não encontrado.");
+            else if (role.Id == (int)ERole.Admin)
+                throw new AuthenticationException($"Role com ID {request.RoleId} não tem permissão para executar esta ação.");
+
             var newGame = new Game
             {
-                Name = game.Name,
-                Description = game.Description,
-                Price = game.Price,
-                ReleasedDate = game.ReleasedDate,
-                Genre = game.Genre
+                Name = request.Name,
+                Description = request.Description,
+                Price = request.Price,
+                ReleasedDate = request.ReleasedDate,
+                Genre = request.Genre
             };
-            return _gameRepository.CreateAsync(newGame);
+
+            var createdGame = await _gameRepository.CreateAsync(newGame);
+
+            return new GameResponse
+            {
+                Id = createdGame.Id,
+                Name = createdGame.Name,
+                Description = createdGame.Description,
+                Price = createdGame.Price,
+                ReleasedDate = createdGame.ReleasedDate,
+                Genre = createdGame.Genre
+            };
         }
-        public async Task<bool> UpdateAsync(int id,GameUpdateRequest game)
+   
+        public async Task<bool> UpdateAsync(int id, GameUpdateRequest game)
         {
-            var newGame = await _gameRepository.GetByIdAsync(id);
-            if (newGame == null)
+            var existingGame = await _gameRepository.GetByIdAsync(id);
+            if (existingGame == null)
                 return false;
 
-            newGame.Name = game.Name;
-            newGame.Description = game.Description;
-            newGame.Price = game.Price;
+            existingGame.Name = game.Name;
+            existingGame.Description = game.Description;
+            existingGame.Price = game.Price;
             if (game.ReleasedDate != null)
-                newGame.ReleasedDate = game.ReleasedDate;
-            newGame.Genre = game.Genre;
+                existingGame.ReleasedDate = game.ReleasedDate;
+            existingGame.Genre = game.Genre;
 
-
-            await _gameRepository.UpdateAsync(newGame);
+            await _gameRepository.UpdateAsync(existingGame);
 
             return true;
         }
         public Task<bool> DeleteAsync(int id) => _gameRepository.DeleteAsync(id);
     }
-    
+
 
 }
