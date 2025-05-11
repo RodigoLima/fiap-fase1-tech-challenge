@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using fiap_fase1_tech_challenge.Configurations;
 using fiap_fase1_tech_challenge.DTOs.Auth;
-using fiap_fase1_tech_challenge.Repositories.Interfaces;
 using fiap_fase1_tech_challenge.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

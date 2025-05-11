@@ -8,7 +8,7 @@ namespace fiap_fase1_tech_challenge.Services.Interfaces
     Task<IEnumerable<Promotion>> GetAllAsync();
     Task<Promotion?> GetByIdAsync(int id);
     Task<PromotionResponse> CreateAsync(PromotionCreateRequest Promotion);
-    Task<bool> UpdateAsync(Promotion Promotion);
+    Task<bool> UpdateAsync(int id,PromotionUpdateRequest Promotion);
     Task<bool> DeleteAsync(int id);
   }
 }

@@ -15,7 +15,7 @@ namespace fiap_fase1_tech_challenge.Extensions
             var seeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
 
             context.Database.Migrate();
-            seeder.SeedDatabase(context); 
+            seeder.SeedDatabase(context);
 
             return services;
         }

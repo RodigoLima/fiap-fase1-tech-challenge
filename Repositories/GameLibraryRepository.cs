@@ -14,6 +14,7 @@ namespace fiap_fase1_tech_challenge.Repositories
             _context = context;
         }
 
+        public async Task<IEnumerable<GameLibrary>> GetAllAsync() => await _context.GameLibraries.ToListAsync();
         public async Task<IEnumerable<GameLibrary>> GetAllByUser(int userId) => await _context.GameLibraries.Include(gl => gl.Game).Where(gl => gl.UserId == userId).ToListAsync();
 
         public async Task<GameLibrary?> GetByIdAsync(int id) => await _context.GameLibraries.Include(gl => gl.Game).FirstOrDefaultAsync(gl => gl.Id == id);

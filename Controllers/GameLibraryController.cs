@@ -1,15 +1,16 @@
-﻿using fiap_fase1_tech_challenge.Models;
+﻿using fiap_fase1_tech_challenge.DTOs.GameLibrary;
+using fiap_fase1_tech_challenge.Models;
 using fiap_fase1_tech_challenge.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController : ControllerBase
+public class GameLibraryController : ControllerBase
 {
-    private readonly IUserService _service;
+    private readonly IGameLibraryService _service;
 
-    public UserController(IUserService service)
+    public GameLibraryController(IGameLibraryService service)
     {
         _service = service;
     }
@@ -20,27 +21,25 @@ public class UserController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var user = await _service.GetByIdAsync(id);
-        return user == null ? NotFound() : Ok(user);
+        var gameLibrary = await _service.GetByIdAsync(id);
+        return gameLibrary == null ? NotFound() : Ok(gameLibrary);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] UserCreateRequest user)
+    public async Task<IActionResult> Create([FromBody] GameLibraryCreateRequest gameLibrary)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var created = await _service.CreateAsync(user);
+        var created = await _service.CreateAsync(gameLibrary);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] UserUpdateRequest user)
+    public async Task<IActionResult> Update(int id, [FromBody] GameLibraryUpdateRequest gameLibrary)
     {
-        if (user == null)
+
+        if (gameLibrary == null)
             return BadRequest("Dados inválidos.");
 
-        var updated = await _service.UpdateAsync(id, user);
+        var updated = await _service.UpdateAsync(id, gameLibrary);
 
         return updated
             ? NoContent()

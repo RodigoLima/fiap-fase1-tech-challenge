@@ -10,54 +10,70 @@ using System.Security.Authentication;
 
 namespace fiap_fase1_tech_challenge.Services
 {
-  public class GameService : IGameService
-  {
-
-    private readonly IGameRepository _GameRepository;
-    private readonly IRoleRepository _roleRepository;
-
-    public GameService(IGameRepository GameRepository, IRoleRepository roleRepository)
-    {
-      _GameRepository = GameRepository;
-      _roleRepository = roleRepository;
-    }
-
-    public Task<IEnumerable<Game>> GetAllAsync() => _GameRepository.GetAllAsync();
-    public Task<Game?> GetByIdAsync(int id) => _GameRepository.GetByIdAsync(id);
-    public async Task<GameResponse> CreateAsync(GameCreateRequest request)
+    public class GameService : IGameService
     {
 
-      var role = await _roleRepository.GetByIdAsync(request.RoleId);
+        private readonly IGameRepository _gameRepository;
+        private readonly IRoleRepository _roleRepository;
 
-      if (role == null)
-        throw new ArgumentException($"Role com ID {request.RoleId} não encontrado.");
-      else if (role.Id != (int)ERole.Admin)
-        throw new AuthenticationException($"Role com ID {request.RoleId} não tem permissão para executar esta ação.");
+        public GameService(IGameRepository GameRepository, IRoleRepository roleRepository)
+        {
+            _gameRepository = GameRepository;
+            _roleRepository = roleRepository;
+        }
 
+        public Task<IEnumerable<Game>> GetAllAsync() => _gameRepository.GetAllAsync();
+        public Task<Game?> GetByIdAsync(int id) => _gameRepository.GetByIdAsync(id);
+        public async Task<GameResponse> CreateAsync(GameCreateRequest request)
+        {
+            var role = await _roleRepository.GetByIdAsync(request.RoleId);
 
-      var Game = new Game
-      {
-        Name = request.Name,
-        Description = request.Description,
-        Price = request.Price,
-        ReleasedDate = request.ReleasedDate,
-        Genre = request.Genre
-      };
+            if (role == null)
+                throw new ArgumentException($"Role com ID {request.RoleId} não encontrado.");
+            else if (role.Id == (int)ERole.Admin)
+                throw new AuthenticationException($"Role com ID {request.RoleId} não tem permissão para executar esta ação.");
 
-      await _GameRepository.CreateAsync(Game);
+            var newGame = new Game
+            {
+                Name = request.Name,
+                Description = request.Description,
+                Price = request.Price,
+                ReleasedDate = request.ReleasedDate,
+                Genre = request.Genre
+            };
 
-      return new GameResponse
-      {
-        Id = Game.Id,
-        Name = request.Name,
-        Description = request.Description,
-        Price = request.Price,
-        ReleasedDate = request.ReleasedDate,
-        Genre = request.Genre
-      };
+            var createdGame = await _gameRepository.CreateAsync(newGame);
 
+            return new GameResponse
+            {
+                Id = createdGame.Id,
+                Name = createdGame.Name,
+                Description = createdGame.Description,
+                Price = createdGame.Price,
+                ReleasedDate = createdGame.ReleasedDate,
+                Genre = createdGame.Genre
+            };
+        }
+   
+        public async Task<bool> UpdateAsync(int id, GameUpdateRequest game)
+        {
+            var existingGame = await _gameRepository.GetByIdAsync(id);
+            if (existingGame == null)
+                return false;
+
+            existingGame.Name = game.Name;
+            existingGame.Description = game.Description;
+            existingGame.Price = game.Price;
+            if (game.ReleasedDate != null)
+                existingGame.ReleasedDate = game.ReleasedDate;
+            existingGame.Genre = game.Genre;
+
+            await _gameRepository.UpdateAsync(existingGame);
+
+            return true;
+        }
+        public Task<bool> DeleteAsync(int id) => _gameRepository.DeleteAsync(id);
     }
-    public Task<bool> UpdateAsync(Game Game) => _GameRepository.UpdateAsync(Game);
-    public Task<bool> DeleteAsync(int id) => _GameRepository.DeleteAsync(id);
-  }
+
+
 }

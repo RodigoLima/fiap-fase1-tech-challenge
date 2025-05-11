@@ -1,4 +1,6 @@
-﻿namespace fiap_fase1_tech_challenge.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace fiap_fase1_tech_challenge.Models
 {
     public class User : BaseModel
     {

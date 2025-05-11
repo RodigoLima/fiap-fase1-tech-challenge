@@ -10,56 +10,69 @@ using System.Security.Authentication;
 
 namespace fiap_fase1_tech_challenge.Services
 {
-  public class PromotionService : IPromotionService
-  {
-
-    private readonly IPromotionRepository _PromotionRepository;
-    private readonly IRoleRepository _roleRepository;
-
-    public PromotionService(IPromotionRepository PromotionRepository, IRoleRepository roleRepository)
+    public class PromotionService : IPromotionService
     {
-      _PromotionRepository = PromotionRepository;
-      _roleRepository = roleRepository;
+
+        private readonly IPromotionRepository _promotionRepository;
+        private readonly IRoleRepository _roleRepository;
+
+        public PromotionService(IPromotionRepository promotionRepository, IRoleRepository roleRepository)
+        {
+            _promotionRepository = promotionRepository;
+            _roleRepository = roleRepository;
+        }
+
+        public Task<IEnumerable<Promotion>> GetAllAsync() => _promotionRepository.GetAllAsync();
+        public Task<Promotion?> GetByIdAsync(int id) => _promotionRepository.GetByIdAsync(id);
+        public async Task<PromotionResponse> CreateAsync(PromotionCreateRequest promotion)
+        {
+            await _validarRole(promotion);
+
+            var newPromotion = new Promotion
+            {
+                DiscountPercentage = promotion.DiscountPercentage,
+                InitialDate = promotion.InitialDate,
+                FinalDate = promotion.FinalDate,
+                GameId = promotion.GameId
+            };
+
+            var createdPromotion = await _promotionRepository.CreateAsync(newPromotion);
+
+            return new PromotionResponse
+            {
+                Id = createdPromotion.Id,
+                DiscountPercentage = createdPromotion.DiscountPercentage,
+                InitialDate = createdPromotion.InitialDate,
+                FinalDate = createdPromotion.FinalDate,
+                GameId = createdPromotion.GameId
+            };
+        }
+        public async Task<bool> UpdateAsync(int id, PromotionUpdateRequest promotion)
+        {
+
+            var existingPromotion = await _promotionRepository.GetByIdAsync(id);
+            if (existingPromotion == null)
+                return false;
+
+            existingPromotion.DiscountPercentage = promotion.DiscountPercentage;
+            existingPromotion.InitialDate = promotion.InitialDate;
+            existingPromotion.FinalDate = promotion.FinalDate;
+            existingPromotion.GameId = promotion.GameId;
+
+            await _promotionRepository.UpdateAsync(existingPromotion);
+
+            return true;
+        }
+        public Task<bool> DeleteAsync(int id) => _promotionRepository.DeleteAsync(id);
+
+        private async Task _validarRole(PromotionCreateRequest request)
+        {
+            Role role = await _roleRepository.GetByIdAsync(request.RoleId);
+
+            if (role == null)
+                throw new ArgumentException($"Role com ID {request.RoleId} não encontrado.");
+            else if (role.Id == (int)ERole.Admin)
+                throw new AuthenticationException($"Role com ID {request.RoleId} não tem permissão para executar esta ação.");
+        }
     }
-
-    public Task<IEnumerable<Promotion>> GetAllAsync() => _PromotionRepository.GetAllAsync();
-    public Task<Promotion?> GetByIdAsync(int id) => _PromotionRepository.GetByIdAsync(id);
-    public async Task<PromotionResponse> CreateAsync(PromotionCreateRequest request)
-    {
-      await _validarRole(request);
-
-      var Promotion = new Promotion
-      {
-        DiscountPercentage = request.DiscountPercentage,
-        InitialDate = request.InitialDate,
-        FinalDate = request.FinalDate,
-        GameId = request.GameId
-      };
-
-      await _PromotionRepository.CreateAsync(Promotion);
-
-      return new PromotionResponse
-      {
-        Id = Promotion.Id,
-        DiscountPercentage = request.DiscountPercentage,
-        InitialDate = request.InitialDate,
-        FinalDate = request.FinalDate,
-        GameId = request.GameId
-      };
-
-    }
-
-    public Task<bool> UpdateAsync(Promotion Promotion) => _PromotionRepository.UpdateAsync(Promotion);
-    public Task<bool> DeleteAsync(int id) => _PromotionRepository.DeleteAsync(id);
-
-    private async Task _validarRole(PromotionCreateRequest request)
-    {
-      Role role = await _roleRepository.GetByIdAsync(request.RoleId);
-
-      if (role == null)
-        throw new ArgumentException($"Role com ID {request.RoleId} não encontrado.");
-      else if (role.Id == (int)ERole.Admin)
-        throw new AuthenticationException($"Role com ID {request.RoleId} não tem permissão para executar esta ação.");
-    }
-  }
 }

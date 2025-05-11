@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35919.96 d17.13
+VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fiap-fase1-tech-challenge", "fiap-fase1-tech-challenge.csproj", "{ECB427CD-F91C-450F-9C41-025E2CE14877}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fiap-fase1-tech-challenge.Test", "..\fiap-fase1-tech-challenge.Test\fiap-fase1-tech-challenge.Test.csproj", "{9F6C2F4D-5837-4252-9E1C-58FD54B641BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{ECB427CD-F91C-450F-9C41-025E2CE14877}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECB427CD-F91C-450F-9C41-025E2CE14877}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECB427CD-F91C-450F-9C41-025E2CE14877}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F6C2F4D-5837-4252-9E1C-58FD54B641BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F6C2F4D-5837-4252-9E1C-58FD54B641BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F6C2F4D-5837-4252-9E1C-58FD54B641BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F6C2F4D-5837-4252-9E1C-58FD54B641BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

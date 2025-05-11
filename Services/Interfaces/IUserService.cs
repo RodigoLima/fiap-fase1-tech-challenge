@@ -8,7 +8,7 @@ namespace fiap_fase1_tech_challenge.Services.Interfaces
         Task<IEnumerable<User>> GetAllAsync();
         Task<User?> GetByIdAsync(int id);
         Task<UserResponse> CreateAsync(UserCreateRequest user);
-        Task<bool> UpdateAsync(User user);
+        Task<bool> UpdateAsync(int id,UserUpdateRequest user);
         Task<bool> DeleteAsync(int id);
         Task<User?> AuthenticateAsync(string email, string password);
     }

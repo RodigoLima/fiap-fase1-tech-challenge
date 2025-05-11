@@ -1,26 +1,24 @@
-﻿using fiap_fase1_tech_challenge.Database.Seeders;
+﻿using fiap_fase1_tech_challenge.Database;
+using fiap_fase1_tech_challenge.Database.Seeders;
 using System;
 
-namespace fiap_fase1_tech_challenge.Database
+public class DatabaseSeeder : IDatabaseSeeder
 {
-    public class DatabaseSeeder: IDatabaseSeeder
+    private readonly IEnumerable<ISeeder> _seeders;
+
+    public DatabaseSeeder(IEnumerable<ISeeder> seeders)
     {
-        private readonly IEnumerable<ISeeder> _seeders;
+        _seeders = seeders;
+    }
 
-        public DatabaseSeeder(IEnumerable<ISeeder> seeders)
+    public void SeedDatabase(ApplicationContext context)
+    {
+        foreach (var seeder in _seeders)
         {
-            _seeders = seeders;
+            seeder.Seed(context);
+
         }
-
-        public void SeedDatabase(ApplicationContext context)
-        {
-            foreach (var seeder in _seeders)
-            {
-                seeder.Seed(context);
-
-            }
-        }
-
     }
 
 }
+

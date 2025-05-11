@@ -1,4 +1,5 @@
-﻿using fiap_fase1_tech_challenge.Models;
+﻿using fiap_fase1_tech_challenge.DTOs.Role;
+using fiap_fase1_tech_challenge.Models;
 using fiap_fase1_tech_challenge.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,18 +25,23 @@ public class RoleController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Role role)
+    public async Task<IActionResult> Create([FromBody] RoleCreateRequest role)
     {
         var created = await _service.CreateAsync(role);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] Role role)
+    public async Task<IActionResult> Update(int id, [FromBody] RoleUpdateRequest role)
     {
-        if (id != role.Id) return BadRequest();
-        var updated = await _service.UpdateAsync(role);
-        return updated ? NoContent() : NotFound();
+        if (role == null)
+            return BadRequest("Dados inválidos.");
+
+        var updated = await _service.UpdateAsync(id, role);
+
+        return updated
+            ? NoContent()
+            : NotFound();
     }
 
     [HttpDelete("{id}")]

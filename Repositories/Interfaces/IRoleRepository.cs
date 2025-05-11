@@ -1,4 +1,5 @@
-﻿using fiap_fase1_tech_challenge.Models;
+﻿using fiap_fase1_tech_challenge.DTOs.Role;
+using fiap_fase1_tech_challenge.Models;
 
 namespace fiap_fase1_tech_challenge.Repositories.Interfaces
 {
