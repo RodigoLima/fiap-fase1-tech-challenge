@@ -23,7 +23,7 @@ public class UserController : ControllerBase
         var user = await _service.GetByIdAsync(id);
         return user == null ? NotFound() : Ok(user);
     }
-
+    [Authorize(Policy = "Admin")]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] UserCreateRequest user)
     {
@@ -33,7 +33,7 @@ public class UserController : ControllerBase
         var created = await _service.CreateAsync(user);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
-
+    [Authorize(Policy = "Admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] UserUpdateRequest user)
     {
@@ -46,7 +46,7 @@ public class UserController : ControllerBase
             ? NoContent()
             : NotFound();
     }
-
+    [Authorize(Policy = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

@@ -11,9 +11,7 @@ namespace fiap_fase1_tech_challenge.DTOs.Game
     [Required]
     public double Price { get; set; }
     public DateTime? ReleasedDate { get; set; }
-    [Required]
+    [Required, MaxLength(20)]
     public string Genre { get; set; } = string.Empty;
-    [Required]
-    public int RoleId { get; set; }
   }
 }
