@@ -26,13 +26,6 @@ namespace fiap_fase1_tech_challenge.Services
         public Task<Game?> GetByIdAsync(int id) => _gameRepository.GetByIdAsync(id);
         public async Task<GameResponse> CreateAsync(GameCreateRequest request)
         {
-            var role = await _roleRepository.GetByIdAsync(request.RoleId);
-
-            if (role == null)
-                throw new ArgumentException($"Role com ID {request.RoleId} não encontrado.");
-            else if (role.Id == (int)ERole.Admin)
-                throw new AuthenticationException($"Role com ID {request.RoleId} não tem permissão para executar esta ação.");
-
             var newGame = new Game
             {
                 Name = request.Name,

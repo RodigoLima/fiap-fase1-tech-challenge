@@ -1,6 +1,7 @@
 ﻿using fiap_fase1_tech_challenge.DTOs.Promotion;
 using fiap_fase1_tech_challenge.Models;
 using fiap_fase1_tech_challenge.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -22,7 +23,7 @@ public class PromotionController : ControllerBase
         var user = await _service.GetByIdAsync(id);
         return user == null ? NotFound() : Ok(user);
     }
-
+    [Authorize(Policy = "Admin")]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] PromotionCreateRequest Promotion)
     {
@@ -32,7 +33,7 @@ public class PromotionController : ControllerBase
         var created = await _service.CreateAsync(Promotion);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
-
+    [Authorize(Policy = "Admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] PromotionUpdateRequest promotion)
     {
@@ -45,7 +46,7 @@ public class PromotionController : ControllerBase
             ? NoContent()
             : NotFound();
     }
-
+    [Authorize(Policy = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

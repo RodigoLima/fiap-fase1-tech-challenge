@@ -63,15 +63,6 @@ namespace fiap_fase1_tech_challenge.Services
         {
             var newUser = await GetByIdAsync(id);
 
-            if(user.RoleId != null)
-            {
-                newUser!.RoleId = (int)user.RoleId;
-                var role = await _roleService.GetByIdAsync(newUser.RoleId);
-                if (role == null)
-                    throw new NotFoundException(RoleMessages.RoleNotFoundMessage);
-            }
-
-
             // Atualização de senha, se necessário
             if (!string.IsNullOrWhiteSpace(user.NewPassword))
             {
