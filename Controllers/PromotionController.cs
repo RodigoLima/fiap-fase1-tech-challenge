@@ -1,4 +1,4 @@
-﻿using fiap_fase1_tech_challenge.DTOs.Promotion;
+using fiap_fase1_tech_challenge.DTOs.Promotion;
 using fiap_fase1_tech_challenge.Models;
 using fiap_fase1_tech_challenge.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
