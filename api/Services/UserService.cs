@@ -59,24 +59,27 @@ namespace fiap_fase1_tech_challenge.Services
             };
         }
 
+        private void UpdatePassword(User user, string? oldPassword, string? newPassword)
+        {
+            if (!string.IsNullOrWhiteSpace(newPassword))
+            {
+                if (string.IsNullOrWhiteSpace(oldPassword))
+                    throw new ArgumentException("Senha antiga é obrigatória.");
+
+                var senhaCorreta = _hasher.Verify(oldPassword, user.Password);
+                if (!senhaCorreta)
+                    throw new ValidationException(UserMessages.Password.InvalidOld);
+
+                user.Password = _hasher.Hash(newPassword);
+            }
+        }
+
         public async Task<bool> UpdateAsync(int id, UserUpdateRequest user)
         {
             var newUser = await GetByIdAsync(id);
 
-            // Atualização de senha, se necessário
-            if (!string.IsNullOrWhiteSpace(user.NewPassword))
-            {
-                if (string.IsNullOrWhiteSpace(user.OldPassword))
-                    throw new ArgumentException("Senha antiga é obrigatória.");
+            UpdatePassword(newUser!, user.OldPassword, user.NewPassword);
 
-                var senhaCorreta = _hasher.Verify(user.OldPassword, newUser!.Password);
-                if (!senhaCorreta)
-                    throw new ValidationException(UserMessages.Password.InvalidOld);
-
-                newUser.Password = _hasher.Hash(user.NewPassword);
-            }
-
-            // Atualiza demais propriedades
             newUser!.Name = user.Name ?? newUser.Name;
             newUser!.Email = user.Email ?? newUser.Email;
 
