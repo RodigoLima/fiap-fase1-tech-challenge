@@ -1,7 +1,7 @@
 using fiap_fase1_tech_challenge.Configurations;
-using fiap_fase1_tech_challenge.Database;
 using fiap_fase1_tech_challenge.Extensions;
 using fiap_fase1_tech_challenge.Middlewares;
+using fiap_fase1_tech_challenge.Validators;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -31,6 +31,7 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 builder.Services.AddApplicationServices();
 builder.Services.AddAuthorizationPolicies();
 builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddValidators();
 builder.Services.ApplyMigrationsAndSeed();
 
 var app = builder.Build();

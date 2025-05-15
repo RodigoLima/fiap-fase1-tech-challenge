@@ -1,6 +1,8 @@
 ﻿using fiap_fase1_tech_challenge.DTOs.Game;
+using fiap_fase1_tech_challenge.Enums;
 using fiap_fase1_tech_challenge.Models;
 using fiap_fase1_tech_challenge.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -21,6 +23,7 @@ public class GameController : ControllerBase
         var user = await _service.GetByIdAsync(id);
         return user == null ? NotFound() : Ok(user);
     }
+    [Authorize(Policy = "Admin")]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] GameCreateRequest game)
     {
@@ -30,6 +33,7 @@ public class GameController : ControllerBase
         var created = await _service.CreateAsync(game);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
+    [Authorize(Policy = "Admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] GameUpdateRequest game)
     {
@@ -42,6 +46,7 @@ public class GameController : ControllerBase
             ? NoContent()
             : NotFound();
     }
+    [Authorize(Policy = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
