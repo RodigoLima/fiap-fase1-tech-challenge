@@ -1,5 +1,7 @@
 ﻿using fiap_fase1_tech_challenge.Models;
 using fiap_fase1_tech_challenge.Services.Interfaces;
+using fiap_fase1_tech_challenge.Validators;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +10,14 @@ using Microsoft.AspNetCore.Mvc;
 public class UserController : ControllerBase
 {
     private readonly IUserService _service;
+    private readonly IValidator<UserCreateRequest> _validatorCreate;
+    private readonly IValidator<UserUpdateRequest> _validatorUpdate;
 
-    public UserController(IUserService service)
+    public UserController(IUserService service, IValidator<UserCreateRequest> validatorCreate, IValidator<UserUpdateRequest> validatorUpdate)
     {
         _service = service;
+        _validatorCreate = validatorCreate;
+        _validatorUpdate = validatorUpdate;
     }
 
     [HttpGet]
@@ -27,8 +33,7 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] UserCreateRequest user)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+        await ValidationHelper.ValidateAsync(_validatorCreate, user);
 
         var created = await _service.CreateAsync(user);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
@@ -37,8 +42,7 @@ public class UserController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] UserUpdateRequest user)
     {
-        if (user == null)
-            return BadRequest("Dados inválidos.");
+        await ValidationHelper.ValidateAsync(_validatorUpdate, user);
 
         var updated = await _service.UpdateAsync(id, user);
 

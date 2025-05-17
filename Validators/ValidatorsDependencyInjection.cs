@@ -1,4 +1,6 @@
-﻿using fiap_fase1_tech_challenge.Validators.User;
+﻿using fiap_fase1_tech_challenge.DTOs.Game;
+using fiap_fase1_tech_challenge.Validators.Game;
+using fiap_fase1_tech_challenge.Validators.User;
 using FluentValidation;
 
 namespace fiap_fase1_tech_challenge.Validators
@@ -9,6 +11,9 @@ namespace fiap_fase1_tech_challenge.Validators
         {
             services.AddScoped<IValidator<UserCreateRequest>, UserCreateRequestValidator>();
             services.AddScoped<IValidator<UserUpdateRequest>, UserUpdateRequestValidator>();
+
+            services.AddScoped<IValidator<GameCreateRequest>, GameCreateRequestValidator>();
+            services.AddScoped<IValidator<GameUpdateRequest>, GameUpdateRequestValidator>();
 
             return services;
         }

@@ -22,7 +22,7 @@ namespace fiap_fase1_tech_challenge.Services
             _hasher = hasher;
         }
 
-        public Task<IEnumerable<User>> GetAllAsync() => _userRepository.GetAllAsync();
+        public async Task<IEnumerable<User>> GetAllAsync() => await _userRepository.GetAllAsync();
 
         public async Task<User?> GetByIdAsync(int id)
         {

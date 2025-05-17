@@ -2,10 +2,10 @@
 {
     public class GameUpdateRequest
     {
-        public required string Name { get; set; }
+        public string? Name { get; set; }
         public string? Description { get; set; }
-        public double Price { get; set; }
+        public double? Price { get; set; }
         public DateTime? ReleasedDate { get; set; }
-        public required string Genre { get; set; }
+        public string? Genre { get; set; }
     }
 }
