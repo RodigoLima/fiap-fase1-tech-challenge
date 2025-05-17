@@ -31,6 +31,7 @@ namespace fiap_fase1_tech_challenge.Extensions
             services.AddScoped<IGameLibraryService, GameLibraryService>();
             
             services.AddScoped<ISeeder, RoleSeeder>();
+            services.AddScoped<ISeeder, UserSeeder>();
             services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
             services.AddScoped<AuthService>();
 
