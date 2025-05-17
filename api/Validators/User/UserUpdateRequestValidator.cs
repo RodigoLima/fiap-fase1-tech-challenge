@@ -13,31 +13,25 @@ namespace fiap_fase1_tech_challenge.Validators.User
 
             RuleFor(u => u.Email)
                 .EmailAddress().WithMessage(UserMessages.Email.InvalidFormat)
-                .When(u => !string.IsNullOrWhiteSpace(u.Email));
-
-            RuleFor(u => u.Email)
+                .When(u => !string.IsNullOrWhiteSpace(u.Email), ApplyConditionTo.CurrentValidator)
                 .NotEmpty().WithMessage(UserMessages.Email.CannotBeEmpty)
-                .When(u => u.Email != null);
+                .When(u => u.Email != null, ApplyConditionTo.CurrentValidator);
+
 
             RuleFor(u => u.OldPassword)
                 .NotNull().WithMessage(UserMessages.Password.RequiredOld)
-                .When(u => !string.IsNullOrWhiteSpace(u.NewPassword));
-
-            RuleFor(u => u.OldPassword)
+                .When(u => !string.IsNullOrWhiteSpace(u.NewPassword), ApplyConditionTo.CurrentValidator)
                 .NotEmpty().WithMessage(UserMessages.Password.CannotBeEmptyOld)
-                .When(u => u.OldPassword != null);
+                .When(u => u.OldPassword != null, ApplyConditionTo.CurrentValidator);
+
 
             RuleFor(u => u.NewPassword)
                 .NotEmpty().WithMessage(UserMessages.Password.CannotBeEmpty)
-                .When(u => u.NewPassword != null);
-
-            RuleFor(u => u.NewPassword)
+                .When(u => u.NewPassword != null, ApplyConditionTo.CurrentValidator)
                 .MinimumLength(8).WithMessage(UserMessages.Password.InvalidLength)
-                .When(u => !string.IsNullOrWhiteSpace(u.NewPassword));
-
-            RuleFor(u => u.NewPassword)
+                .When(u => !string.IsNullOrWhiteSpace(u.NewPassword), ApplyConditionTo.CurrentValidator)
                 .Must(PasswordValidatorHelper.HasValidFormat!).WithMessage(UserMessages.Password.InvalidFormat)
-                .When(u => !string.IsNullOrWhiteSpace(u.NewPassword) && u.NewPassword.Count() >= 8);
+                .When(u => !string.IsNullOrWhiteSpace(u.NewPassword) && u.NewPassword.Count() >= 8, ApplyConditionTo.CurrentValidator);
 
             RuleFor(u => u.RoleId)
                 .GreaterThan(0).WithMessage(UserMessages.Role.Invalid)

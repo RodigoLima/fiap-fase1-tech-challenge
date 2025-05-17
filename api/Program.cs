@@ -29,7 +29,10 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 });
 
 builder.Services.AddApplicationServices();
-builder.Services.AddAuthorizationPolicies();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", p => p.RequireRole("Admin"));
+});
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddValidators();
 builder.Services.ApplyMigrationsAndSeed();

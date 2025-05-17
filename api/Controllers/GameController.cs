@@ -1,7 +1,6 @@
 ﻿using fiap_fase1_tech_challenge.DTOs.Game;
-using fiap_fase1_tech_challenge.Enums;
-using fiap_fase1_tech_challenge.Models;
-using fiap_fase1_tech_challenge.Services.Interfaces;
+using fiap_fase1_tech_challenge.Validators;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 public class GameController : ControllerBase
 {
     private readonly IGameService _service;
+    private readonly IValidator<GameCreateRequest> _validatorCreate;
+    private readonly IValidator<GameUpdateRequest> _validatorUpdate;
 
-    public GameController(IGameService service)
+    public GameController(IGameService service, IValidator<GameCreateRequest> validatorCreate, IValidator<GameUpdateRequest> validatorUpdate)
     {
         _service = service;
+        _validatorCreate = validatorCreate;
+        _validatorUpdate = validatorUpdate;
     }
     [HttpGet]
     public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
@@ -21,14 +24,13 @@ public class GameController : ControllerBase
     public async Task<IActionResult> GetById(int id)
     {
         var user = await _service.GetByIdAsync(id);
-        return user == null ? NotFound() : Ok(user);
+        return Ok(user);
     }
     [Authorize(Policy = "Admin")]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] GameCreateRequest game)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+        await ValidationHelper.ValidateAsync(_validatorCreate, game);
 
         var created = await _service.CreateAsync(game);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
@@ -37,20 +39,17 @@ public class GameController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] GameUpdateRequest game)
     {
-        if (game == null)
-            return BadRequest("Dados inválidos.");
+        await ValidationHelper.ValidateAsync(_validatorUpdate, game);
 
         var updated = await _service.UpdateAsync(id, game);
 
-        return updated
-            ? NoContent()
-            : NotFound();
+        return NoContent();
     }
     [Authorize(Policy = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         var deleted = await _service.DeleteAsync(id);
-        return deleted ? NoContent() : NotFound();
+        return NoContent();
     }
 }

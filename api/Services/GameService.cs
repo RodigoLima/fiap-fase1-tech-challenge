@@ -1,12 +1,8 @@
-﻿using fiap_fase1_tech_challenge.Database;
-using fiap_fase1_tech_challenge.DTOs.Game;
-using fiap_fase1_tech_challenge.Enums;
+﻿using fiap_fase1_tech_challenge.DTOs.Game;
+using fiap_fase1_tech_challenge.Exceptions;
+using fiap_fase1_tech_challenge.Messages;
 using fiap_fase1_tech_challenge.Models;
-using fiap_fase1_tech_challenge.Repositories;
 using fiap_fase1_tech_challenge.Repositories.Interfaces;
-using fiap_fase1_tech_challenge.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Authentication;
 
 namespace fiap_fase1_tech_challenge.Services
 {
@@ -14,16 +10,21 @@ namespace fiap_fase1_tech_challenge.Services
     {
 
         private readonly IGameRepository _gameRepository;
-        private readonly IRoleRepository _roleRepository;
 
-        public GameService(IGameRepository GameRepository, IRoleRepository roleRepository)
+        public GameService(IGameRepository GameRepository)
         {
             _gameRepository = GameRepository;
-            _roleRepository = roleRepository;
         }
 
-        public Task<IEnumerable<Game>> GetAllAsync() => _gameRepository.GetAllAsync();
-        public Task<Game?> GetByIdAsync(int id) => _gameRepository.GetByIdAsync(id);
+        public async Task<IEnumerable<Game>> GetAllAsync() => await _gameRepository.GetAllAsync();
+        public async Task<Game?> GetByIdAsync(int id)
+        {
+            var game = await _gameRepository.GetByIdAsync(id);
+            if (game == null)
+                throw new NotFoundException(GameMessages.General.NotFound);
+
+            return game;
+        }
         public async Task<GameResponse> CreateAsync(GameCreateRequest request)
         {
             var newGame = new Game
@@ -50,23 +51,21 @@ namespace fiap_fase1_tech_challenge.Services
    
         public async Task<bool> UpdateAsync(int id, GameUpdateRequest game)
         {
-            var existingGame = await _gameRepository.GetByIdAsync(id);
-            if (existingGame == null)
-                return false;
+            var existingGame = await GetByIdAsync(id);
 
-            existingGame.Name = game.Name;
-            existingGame.Description = game.Description;
-            existingGame.Price = game.Price;
-            if (game.ReleasedDate != null)
-                existingGame.ReleasedDate = game.ReleasedDate;
-            existingGame.Genre = game.Genre;
+            existingGame!.Name = game.Name ?? existingGame.Name;
+            existingGame!.Description = game.Description ?? existingGame.Description;
+            existingGame!.Price = game.Price ?? existingGame.Price;
+            existingGame!.ReleasedDate = game.ReleasedDate ?? existingGame.ReleasedDate;
+            existingGame!.Genre = game.Genre ?? existingGame.Genre;
 
-            await _gameRepository.UpdateAsync(existingGame);
-
-            return true;
+            return await _gameRepository.UpdateAsync(existingGame);
         }
-        public Task<bool> DeleteAsync(int id) => _gameRepository.DeleteAsync(id);
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var game = await GetByIdAsync(id);
+
+            return await _gameRepository.DeleteAsync(id);
+        }
     }
-
-
 }

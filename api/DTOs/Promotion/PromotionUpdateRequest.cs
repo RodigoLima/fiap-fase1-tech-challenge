@@ -1,9 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-public class PromotionUpdateRequest
+﻿public class PromotionUpdateRequest
 {
-  public required int DiscountPercentage { get; set; }
-  public required DateTime InitialDate { get; set; }
-  public required DateTime FinalDate { get; set; }
-  public required int GameId { get; set; }
+  public int? DiscountPercentage { get; set; }
+  public DateTime? InitialDate { get; set; }
+  public DateTime? FinalDate { get; set; }
+  public int? GameId { get; set; }
 }

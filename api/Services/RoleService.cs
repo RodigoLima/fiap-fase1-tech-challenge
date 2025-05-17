@@ -1,4 +1,6 @@
 ﻿using fiap_fase1_tech_challenge.DTOs.Role;
+using fiap_fase1_tech_challenge.Exceptions;
+using fiap_fase1_tech_challenge.Messages;
 using fiap_fase1_tech_challenge.Models;
 using fiap_fase1_tech_challenge.Repositories;
 using fiap_fase1_tech_challenge.Repositories.Interfaces;
@@ -17,8 +19,15 @@ namespace fiap_fase1_tech_challenge.Services
             _logger = logger;
         }
         public Task<IEnumerable<Role>> GetAllAsync() => _roleRepository.GetAllAsync();
-        public Task<Role?> GetByIdAsync(int id) => _roleRepository.GetByIdAsync(id);
-        public Task<Role> CreateAsync(RoleCreateRequest role)
+        public async Task<Role?> GetByIdAsync(int id)
+        {
+            var role = await _roleRepository.GetByIdAsync(id);
+            if (role is null)
+                throw new NotFoundException(RoleMessages.General.NotFound);
+
+            return role;
+        }
+        public async Task<RoleResponse> CreateAsync(RoleCreateRequest role)
         {
             _logger.LogInformation("Iniciando criação do Role");
 
@@ -28,23 +37,35 @@ namespace fiap_fase1_tech_challenge.Services
             };
 
             _logger.LogInformation("Criando o Role {Role}", newRole.Name);
-            return _roleRepository.CreateAsync(newRole);
+            
+            var createdRole = await _roleRepository.CreateAsync(newRole);
+
+            return new RoleResponse
+            {
+                Id = createdRole.Id,
+                Name = createdRole.Name
+            };
         }
         
         public async Task<bool> UpdateAsync(int id,RoleUpdateRequest role)
         {
+            if(role.Name != null)
+            {
+                var newRole = await GetByIdAsync(id);
 
-            var newRole = await _roleRepository.GetByIdAsync(id);
-            if (newRole == null)
-                return false;
+                newRole!.Name = role.Name;
 
-            newRole.Name = role.Name;
-
-            await _roleRepository.UpdateAsync(newRole);
+                await _roleRepository.UpdateAsync(newRole);
+            }
 
             return true;
 
         }
-        public Task<bool> DeleteAsync(int id) => _roleRepository.DeleteAsync(id);
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var role = await GetByIdAsync(id);
+
+            return await _roleRepository.DeleteAsync(id);
+        }
     }
 }

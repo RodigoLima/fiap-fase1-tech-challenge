@@ -20,9 +20,16 @@ namespace fiap_fase1_tech_challenge.Repositories
 
         public async Task<Game> CreateAsync(Game game)
         {
-            _context.Games.Add(game);
-            await _context.SaveChangesAsync();
-            return game;
+            Game? gameEncontrado = await _context.Games.Where(x => x.Name.Equals(game.Name)).FirstOrDefaultAsync();
+            if (gameEncontrado != null)
+            {
+                return game;
+            } else
+            {
+                _context.Games.Add(game);
+                await _context.SaveChangesAsync();
+                return game;
+            }
         }
 
         public async Task<bool> DeleteAsync(int id)
