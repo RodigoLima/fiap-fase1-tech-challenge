@@ -1,12 +1,9 @@
-﻿using fiap_fase1_tech_challenge.Database;
-using fiap_fase1_tech_challenge.DTOs.Promotion;
-using fiap_fase1_tech_challenge.Enums;
+﻿using fiap_fase1_tech_challenge.DTOs.Promotion;
+using fiap_fase1_tech_challenge.Exceptions;
+using fiap_fase1_tech_challenge.Messages;
 using fiap_fase1_tech_challenge.Models;
-using fiap_fase1_tech_challenge.Repositories;
 using fiap_fase1_tech_challenge.Repositories.Interfaces;
 using fiap_fase1_tech_challenge.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Authentication;
 
 namespace fiap_fase1_tech_challenge.Services
 {
@@ -14,18 +11,26 @@ namespace fiap_fase1_tech_challenge.Services
     {
 
         private readonly IPromotionRepository _promotionRepository;
-        private readonly IRoleRepository _roleRepository;
+        private readonly IGameService _gameService;
 
-        public PromotionService(IPromotionRepository promotionRepository, IRoleRepository roleRepository)
+        public PromotionService(IPromotionRepository promotionRepository, IGameService gameService)
         {
             _promotionRepository = promotionRepository;
-            _roleRepository = roleRepository;
+            _gameService = gameService;
         }
 
         public Task<IEnumerable<Promotion>> GetAllAsync() => _promotionRepository.GetAllAsync();
-        public Task<Promotion?> GetByIdAsync(int id) => _promotionRepository.GetByIdAsync(id);
+        public async Task<Promotion?> GetByIdAsync(int id)
+        {
+            var promotion = await _promotionRepository.GetByIdAsync(id);
+            if (promotion is null)
+                throw new NotFoundException(PromotionMessages.General.NotFound);
+
+            return promotion;
+        }
         public async Task<PromotionResponse> CreateAsync(PromotionCreateRequest promotion)
         {
+            await _gameService.GetByIdAsync(promotion.GameId);
 
             var newPromotion = new Promotion
             {
@@ -48,21 +53,28 @@ namespace fiap_fase1_tech_challenge.Services
         }
         public async Task<bool> UpdateAsync(int id, PromotionUpdateRequest promotion)
         {
+            var existingPromotion = await GetByIdAsync(id);
 
-            var existingPromotion = await _promotionRepository.GetByIdAsync(id);
-            if (existingPromotion == null)
-                return false;
+            if(promotion.GameId != null)
+            {
+                await _gameService.GetByIdAsync((int)promotion.GameId);
+            }
 
-            existingPromotion.DiscountPercentage = promotion.DiscountPercentage;
-            existingPromotion.InitialDate = promotion.InitialDate;
-            existingPromotion.FinalDate = promotion.FinalDate;
-            existingPromotion.GameId = promotion.GameId;
+            existingPromotion!.DiscountPercentage = promotion.DiscountPercentage ?? existingPromotion.DiscountPercentage;
+            existingPromotion!.InitialDate = promotion.InitialDate ?? existingPromotion.InitialDate;
+            existingPromotion!.FinalDate = promotion.FinalDate ?? existingPromotion.FinalDate;
+            existingPromotion!.GameId = promotion.GameId ?? existingPromotion.GameId;
 
             await _promotionRepository.UpdateAsync(existingPromotion);
 
             return true;
         }
-        public Task<bool> DeleteAsync(int id) => _promotionRepository.DeleteAsync(id);
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var promotion = await GetByIdAsync(id);
+
+            return await _promotionRepository.DeleteAsync(id);
+        }
 
     }
 }

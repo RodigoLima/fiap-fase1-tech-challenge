@@ -74,15 +74,9 @@ namespace fiap_fase1_tech_challenge.Test.UnitTests.Validators.Game
         [Trait("Category", "UnitTest")]
         [Trait("Module", "GameUpdateRequestValidator")]
         [Theory(DisplayName = "Validate_ShouldPassTheValidation")]
-        [MemberData(nameof (TestData.GenerateUpdateRequest),MemberType =typeof(TestData))]
+        [MemberData(nameof (TestData.GenerateValidData),MemberType =typeof(TestData))]
         public void Validate_ShouldPassTheValidation(GameUpdateRequest request)
         {
-            //Arrange
-            //var request = new GameUpdateRequest
-            //{
-            //    Price = 0
-            //};
-
             //Act
             var result = _validator.TestValidate(request);
 
@@ -93,7 +87,7 @@ namespace fiap_fase1_tech_challenge.Test.UnitTests.Validators.Game
 
     public static class TestData
     {
-        public static IEnumerable<object[]> GenerateUpdateRequest()
+        public static IEnumerable<object[]> GenerateValidData()
         {
             yield return new object[]
             {
