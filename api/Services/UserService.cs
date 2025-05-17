@@ -59,29 +59,36 @@ namespace fiap_fase1_tech_challenge.Services
             };
         }
 
-        private void UpdatePassword(User user, string? oldPassword, string? newPassword)
+        public string? UpdatePassword(User user, string oldPassword, string? newPassword)
         {
             if (!string.IsNullOrWhiteSpace(newPassword))
             {
-                if (string.IsNullOrWhiteSpace(oldPassword))
-                    throw new ArgumentException("Senha antiga é obrigatória.");
-
                 var senhaCorreta = _hasher.Verify(oldPassword, user.Password);
                 if (!senhaCorreta)
                     throw new ValidationException(UserMessages.Password.InvalidOld);
 
-                user.Password = _hasher.Hash(newPassword);
+               return _hasher.Hash(newPassword);
             }
+            return null;
         }
 
         public async Task<bool> UpdateAsync(int id, UserUpdateRequest user)
         {
             var newUser = await GetByIdAsync(id);
 
-            UpdatePassword(newUser!, user.OldPassword, user.NewPassword);
+            if (user.RoleId != null)
+                await _roleService.GetByIdAsync((int)user.RoleId);
+
+            var password = UpdatePassword(newUser!, user.OldPassword!, user.NewPassword);
 
             newUser!.Name = user.Name ?? newUser.Name;
             newUser!.Email = user.Email ?? newUser.Email;
+            newUser!.RoleId = user.RoleId ?? newUser.RoleId;
+
+            if(password != null)
+            {
+                newUser!.Password = password;
+            }
 
             await _userRepository.UpdateAsync(newUser);
             return true;
