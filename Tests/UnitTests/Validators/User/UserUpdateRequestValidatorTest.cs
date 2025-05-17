@@ -197,29 +197,38 @@ namespace fiap_fase1_tech_challenge.Test.UnitTests.Validators.User
         }
 
         [Trait("Category", "UnitTest")]
-        [Trait("Module", "UserUpdateRequestValidator")]
-        [Theory(DisplayName = "Validate_ShouldPass_WhenOnlyOneFieldIsProvided")]
-        [InlineData("newName", null, null, null)]
-        [InlineData(null, "valid@mail.com", null, null)]
-        [InlineData(null, null, "@Password123", null)]
-        [InlineData(null, null, null, 1)]
-        public void Validate_ShouldPassTheValidation(string? name, string? email, string? password, int? roleId)
+        [Trait("Module", "PromotionUpdateRequestValidator")]
+        [Theory(DisplayName = "Validate_ShouldPassTheValidation")]
+        [MemberData(nameof(TestData.GenerateValidData), MemberType = typeof(TestData))]
+        public void Validate_ShouldPassTheValidation(UserUpdateRequest request)
         {
-            //Arrange
-            var request = new UserUpdateRequest
-            {
-                Name = name,
-                Email = email,
-                OldPassword = password,
-                NewPassword = password,
-                RoleId = roleId
-            };
-
             //Act
             var result = _validator.TestValidate(request);
 
             //Assert
             result.ShouldNotHaveAnyValidationErrors();
+        }
+    }
+
+    public static class TestData
+    {
+        public static IEnumerable<object[]> GenerateValidData()
+        {
+            yield return new object[]
+            {
+                new UserUpdateRequest{Name = "Test"}
+            };
+
+            yield return new object[]
+            {
+                new UserUpdateRequest{OldPassword = "@Password123", NewPassword = "@NewPassword123"}
+            };
+
+            yield return new object[]
+            {
+
+                new UserUpdateRequest{RoleId = 10}
+            };
         }
     }
 }
