@@ -113,7 +113,7 @@ namespace fiap_fase1_tech_challenge.Test.UnitTests.Services
             var user = UserFaker.FakeListOfUser(1)[0];
             var role = new Role { Id = user.Id, Name = "RoleName" };
 
-            var userData = new UserCreateRequest
+            var request = new UserCreateRequest
             {
                 Name = user.Name,
                 Email = user.Email,
@@ -122,43 +122,21 @@ namespace fiap_fase1_tech_challenge.Test.UnitTests.Services
             };
 
             _roleService
-                .Setup(r => r.GetByIdAsync(userData.RoleId))
+                .Setup(r => r.GetByIdAsync(request.RoleId))
                 .ReturnsAsync(role);
 
             _userRepository
-                .Setup(u => u.CreateAsync(user));
+                .Setup(u => u.CreateAsync(It.IsAny<User>()))
+                .ReturnsAsync(user);
 
             //Act
-            var result = await _userService.CreateAsync(userData);
+            var result = await _userService.CreateAsync(request);
 
             //Assert
             result.Should().NotBeNull();
-            result.Name.Should().Be(userData.Name);
-            result.Email.Should().Be(userData.Email);
+            result.Name.Should().Be(request.Name);
+            result.Email.Should().Be(request.Email);
             result.RoleName.Should().Be(role.Name);
-        }
-
-        [Trait("Category", "UnitTest")]
-        [Trait("Module", "UserService")]
-        [Fact(DisplayName = "CreateAsync_ShouldThrowRoleNotFound")]
-        public async Task CreateAsync_ShouldThrowRoleNotFound()
-        {
-            //Arrange
-            var request = new UserCreateRequest
-            {
-                RoleId = 1
-            };
-
-            _roleService
-                .Setup(r => r.GetByIdAsync(request.RoleId))
-                .ReturnsAsync((Role?)null);
-
-            //Act & Assert
-            await FluentActions
-                .Awaiting(() => _userService.CreateAsync(request))
-                .Should()
-                .ThrowAsync<NotFoundException>()
-                .WithMessage(RoleMessages.RoleNotFoundMessage);
         }
 
         [Trait("Category", "UnitTest")]

@@ -1,6 +1,7 @@
 ﻿using fiap_fase1_tech_challenge.DTOs.Role;
-using fiap_fase1_tech_challenge.Models;
 using fiap_fase1_tech_challenge.Services.Interfaces;
+using fiap_fase1_tech_challenge.Validators;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -8,10 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 public class RoleController : ControllerBase
 {
     private readonly IRoleService _service;
+    private readonly IValidator<RoleCreateRequest> _validatorCreate;
+    private readonly IValidator<RoleUpdateRequest> _validatorUpdate;
 
-    public RoleController(IRoleService service)
+    public RoleController(IRoleService service, IValidator<RoleCreateRequest> validatorCreate, IValidator<RoleUpdateRequest> validatorUpdate)
     {
         _service = service;
+        _validatorCreate = validatorCreate;
+        _validatorUpdate = validatorUpdate;
     }
 
     [HttpGet]
@@ -21,12 +26,14 @@ public class RoleController : ControllerBase
     public async Task<IActionResult> GetById(int id)
     {
         var role = await _service.GetByIdAsync(id);
-        return role == null ? NotFound() : Ok(role);
+        return Ok(role);
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] RoleCreateRequest role)
     {
+        await ValidationHelper.ValidateAsync(_validatorCreate, role);
+
         var created = await _service.CreateAsync(role);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
@@ -34,20 +41,17 @@ public class RoleController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] RoleUpdateRequest role)
     {
-        if (role == null)
-            return BadRequest("Dados inválidos.");
+        await ValidationHelper.ValidateAsync(_validatorUpdate, role);
 
-        var updated = await _service.UpdateAsync(id, role);
+        await _service.UpdateAsync(id, role);
 
-        return updated
-            ? NoContent()
-            : NotFound();
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var deleted = await _service.DeleteAsync(id);
-        return deleted ? NoContent() : NotFound();
+        await _service.DeleteAsync(id);
+        return NoContent();
     }
 }

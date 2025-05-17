@@ -37,24 +37,21 @@ namespace fiap_fase1_tech_challenge.Services
         {
             var role = await _roleService.GetByIdAsync(user.RoleId);
 
-            if (role == null)
-                throw new NotFoundException(RoleMessages.RoleNotFoundMessage);
-
             var newUser = new User
             {
                 Name = user.Name,
                 Email = user.Email,
                 Password = _hasher.Hash(user.Password),
-                RoleId = role.Id
+                RoleId = role!.Id
             };
 
-            await _userRepository.CreateAsync(newUser);
+            var createdUser = await _userRepository.CreateAsync(newUser);
 
             return new UserResponse
             {
-                Id = newUser.Id, 
-                Name = user.Name,
-                Email = user.Email,
+                Id = createdUser.Id, 
+                Name = createdUser.Name,
+                Email = createdUser.Email,
                 RoleName = role.Name
             };
         }
