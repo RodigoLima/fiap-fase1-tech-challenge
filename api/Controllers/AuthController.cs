@@ -17,7 +17,7 @@ public class AuthController : ControllerBase
     {
         _userService = userService;
         _authService = authService;
-    }
+  }
 
     [AllowAnonymous]
     [HttpPost("login")]

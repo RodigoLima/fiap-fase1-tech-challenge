@@ -26,7 +26,6 @@ namespace fiap_fase1_tech_challenge.Services
         public Task<Promotion?> GetByIdAsync(int id) => _promotionRepository.GetByIdAsync(id);
         public async Task<PromotionResponse> CreateAsync(PromotionCreateRequest promotion)
         {
-            await _validarRole(promotion);
 
             var newPromotion = new Promotion
             {
@@ -65,14 +64,5 @@ namespace fiap_fase1_tech_challenge.Services
         }
         public Task<bool> DeleteAsync(int id) => _promotionRepository.DeleteAsync(id);
 
-        private async Task _validarRole(PromotionCreateRequest request)
-        {
-            Role role = await _roleRepository.GetByIdAsync(request.RoleId);
-
-            if (role == null)
-                throw new ArgumentException($"Role com ID {request.RoleId} não encontrado.");
-            else if (role.Id == (int)ERole.Admin)
-                throw new AuthenticationException($"Role com ID {request.RoleId} não tem permissão para executar esta ação.");
-        }
     }
 }
