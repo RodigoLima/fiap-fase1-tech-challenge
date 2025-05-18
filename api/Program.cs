@@ -1,9 +1,12 @@
-using fiap_fase1_tech_challenge.Configurations;
-using fiap_fase1_tech_challenge.Extensions;
-using fiap_fase1_tech_challenge.Handlers;
+using fiap_fase1_tech_challenge.Common;
+using fiap_fase1_tech_challenge.Common.Configurations;
+using fiap_fase1_tech_challenge.Database;
 using fiap_fase1_tech_challenge.Middlewares;
-using fiap_fase1_tech_challenge.Validators;
-using Microsoft.AspNetCore.Authorization;
+using fiap_fase1_tech_challenge.Modules.Authentication;
+using fiap_fase1_tech_challenge.Modules.Games;
+using fiap_fase1_tech_challenge.Modules.GamesLibrary;
+using fiap_fase1_tech_challenge.Modules.Promotions;
+using fiap_fase1_tech_challenge.Modules.Users;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -15,7 +18,6 @@ builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerWithJwt();
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
 {
@@ -30,12 +32,13 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
     //}
 });
 
-builder.Services.AddApplicationServices();
-builder.Services.AddAuthorizationPolicies();
-builder.Services.AddJwtAuthentication(builder.Configuration);
-builder.Services.AddValidators();
-builder.Services.ApplyMigrationsAndSeed();
-builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, AuthorizationResultHandler>();
+builder.Services.AddDatabaseServices();
+builder.Services.AddCommonServices();
+builder.Services.AddAuthenticationModule(builder.Configuration);
+builder.Services.AddUsersModule();
+builder.Services.AddGamesModule();
+builder.Services.AddPromotionsModule();
+builder.Services.AddGamesLibraryModule();
 
 var app = builder.Build();
 

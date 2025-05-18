@@ -1,4 +1,4 @@
-﻿using fiap_fase1_tech_challenge.Exceptions;
+﻿using fiap_fase1_tech_challenge.Common.Exceptions;
 using Serilog;
 using System.ComponentModel.DataAnnotations;
 using System.Net;

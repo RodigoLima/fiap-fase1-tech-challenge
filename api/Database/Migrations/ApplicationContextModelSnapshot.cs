@@ -21,7 +21,7 @@ namespace fiap_fase1_tech_challenge.Database.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("fiap_fase1_tech_challenge.Models.Game", b =>
+            modelBuilder.Entity("fiap_fase1_tech_challenge.Modules.Games.Models.Game", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -35,8 +35,8 @@ namespace fiap_fase1_tech_challenge.Database.Migrations
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("Genre")
                         .IsRequired()
@@ -62,7 +62,7 @@ namespace fiap_fase1_tech_challenge.Database.Migrations
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("fiap_fase1_tech_challenge.Models.GameLibrary", b =>
+            modelBuilder.Entity("fiap_fase1_tech_challenge.Modules.GamesLibrary.Models.GameLibrary", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -93,7 +93,7 @@ namespace fiap_fase1_tech_challenge.Database.Migrations
                     b.ToTable("GameLibraries");
                 });
 
-            modelBuilder.Entity("fiap_fase1_tech_challenge.Models.Promotion", b =>
+            modelBuilder.Entity("fiap_fase1_tech_challenge.Modules.Promotions.Models.Promotion", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,7 +128,7 @@ namespace fiap_fase1_tech_challenge.Database.Migrations
                     b.ToTable("Promotions");
                 });
 
-            modelBuilder.Entity("fiap_fase1_tech_challenge.Models.Role", b =>
+            modelBuilder.Entity("fiap_fase1_tech_challenge.Modules.Users.Models.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -154,7 +154,7 @@ namespace fiap_fase1_tech_challenge.Database.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("fiap_fase1_tech_challenge.Models.User", b =>
+            modelBuilder.Entity("fiap_fase1_tech_challenge.Modules.Users.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -193,15 +193,15 @@ namespace fiap_fase1_tech_challenge.Database.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("fiap_fase1_tech_challenge.Models.GameLibrary", b =>
+            modelBuilder.Entity("fiap_fase1_tech_challenge.Modules.GamesLibrary.Models.GameLibrary", b =>
                 {
-                    b.HasOne("fiap_fase1_tech_challenge.Models.Game", "Game")
+                    b.HasOne("fiap_fase1_tech_challenge.Modules.Games.Models.Game", "Game")
                         .WithMany("GameLibraries")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("fiap_fase1_tech_challenge.Models.User", "User")
+                    b.HasOne("fiap_fase1_tech_challenge.Modules.Users.Models.User", "User")
                         .WithMany("GameLibraries")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -212,9 +212,9 @@ namespace fiap_fase1_tech_challenge.Database.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("fiap_fase1_tech_challenge.Models.Promotion", b =>
+            modelBuilder.Entity("fiap_fase1_tech_challenge.Modules.Promotions.Models.Promotion", b =>
                 {
-                    b.HasOne("fiap_fase1_tech_challenge.Models.Game", "Game")
+                    b.HasOne("fiap_fase1_tech_challenge.Modules.Games.Models.Game", "Game")
                         .WithMany("Promotions")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -223,9 +223,9 @@ namespace fiap_fase1_tech_challenge.Database.Migrations
                     b.Navigation("Game");
                 });
 
-            modelBuilder.Entity("fiap_fase1_tech_challenge.Models.User", b =>
+            modelBuilder.Entity("fiap_fase1_tech_challenge.Modules.Users.Models.User", b =>
                 {
-                    b.HasOne("fiap_fase1_tech_challenge.Models.Role", "Role")
+                    b.HasOne("fiap_fase1_tech_challenge.Modules.Users.Models.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -234,19 +234,19 @@ namespace fiap_fase1_tech_challenge.Database.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("fiap_fase1_tech_challenge.Models.Game", b =>
+            modelBuilder.Entity("fiap_fase1_tech_challenge.Modules.Games.Models.Game", b =>
                 {
                     b.Navigation("GameLibraries");
 
                     b.Navigation("Promotions");
                 });
 
-            modelBuilder.Entity("fiap_fase1_tech_challenge.Models.Role", b =>
+            modelBuilder.Entity("fiap_fase1_tech_challenge.Modules.Users.Models.Role", b =>
                 {
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("fiap_fase1_tech_challenge.Models.User", b =>
+            modelBuilder.Entity("fiap_fase1_tech_challenge.Modules.Users.Models.User", b =>
                 {
                     b.Navigation("GameLibraries");
                 });

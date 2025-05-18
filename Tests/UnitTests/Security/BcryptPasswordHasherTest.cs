@@ -1,14 +1,14 @@
-﻿using fiap_fase1_tech_challenge.Security;
+﻿using fiap_fase1_tech_challenge.Common.Services.Implementations;
 using FluentAssertions;
 
 namespace fiap_fase1_tech_challenge.Test.UnitTests.Security
 {
     public class BcryptPasswordHasherTest
     {
-        private readonly BcryptPasswordHasher _hasher;
+        private readonly Hasher _hasher;
         public BcryptPasswordHasherTest()
         {
-            _hasher = new BcryptPasswordHasher();
+            _hasher = new Hasher();
         }
 
         [Trait("Category", "UnitTest")]

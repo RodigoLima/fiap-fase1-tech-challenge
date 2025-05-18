@@ -1,6 +1,7 @@
-﻿using fiap_fase1_tech_challenge.DTOs.Game;
-using fiap_fase1_tech_challenge.Messages;
-using fiap_fase1_tech_challenge.Validators.Game;
+﻿using Bogus;
+using fiap_fase1_tech_challenge.Modules.Games.DTOs.Requests;
+using fiap_fase1_tech_challenge.Modules.Games.Messages;
+using fiap_fase1_tech_challenge.Modules.Games.Validators;
 using FluentAssertions;
 using FluentValidation.TestHelper;
 
@@ -61,12 +62,18 @@ namespace fiap_fase1_tech_challenge.Test.UnitTests.Validators.Game
         public void Validate_ShouldReturnMaxSizeForDescription()
         {
             //Arrange
+            var faker = new Faker();
+
+            string description = "";
+            while (description.Length <= 500)
+            {
+                description += " " + faker.Lorem.Sentence();
+            }
+
             var request = new GameCreateRequest
             {
                 Name = "Game test",
-                //Description with 201 characteres
-                Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut " +
-                "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut a.",
+                Description = description,
                 Genre = "test",
                 Price = 10
             };
@@ -144,13 +151,17 @@ namespace fiap_fase1_tech_challenge.Test.UnitTests.Validators.Game
         public void Validate_ShouldReturnValidData()
         {
             //Arrange
+            var faker = new Faker();
+
+            string nome = faker.Commerce.ProductName();
+            string description = faker.Commerce.ProductDescription();
+            if (description.Length > 500)
+                description = description.Substring(0, 500);
+
             var request = new GameCreateRequest
             {
-                //Name with 50 caracteres
-                Name = "Lorem ipsum dolor sit amet, consectetur adipisci.",
-                //Description with 200 caracteres
-                Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt " +
-                "ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi eta.",
+                Name = nome,
+                Description = description,
                 Price = 10,
                 Genre = "test"
             };

@@ -1,6 +1,7 @@
-﻿using fiap_fase1_tech_challenge.DTOs.Game;
-using fiap_fase1_tech_challenge.Messages;
-using fiap_fase1_tech_challenge.Validators.Game;
+﻿using Bogus;
+using fiap_fase1_tech_challenge.Modules.Games.DTOs.Requests;
+using fiap_fase1_tech_challenge.Modules.Games.Messages;
+using fiap_fase1_tech_challenge.Modules.Games.Validators;
 using FluentValidation.TestHelper;
 
 namespace fiap_fase1_tech_challenge.Test.UnitTests.Validators.Game
@@ -39,11 +40,15 @@ namespace fiap_fase1_tech_challenge.Test.UnitTests.Validators.Game
         public void Validate_ShouldReturnMaxSizeForDescription()
         {
             //Arrange
+            var faker = new Faker();
+            string description = "";
+            while(description.Length <= 500)
+            {
+                description += " " + faker.Lorem.Sentence();
+            }
             var request = new GameUpdateRequest
             {
-                //Description with 201 characteres
-                Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut " +
-                "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut a.",
+                Description = description,
             };
 
             //Act

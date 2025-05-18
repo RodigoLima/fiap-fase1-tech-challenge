@@ -29,4 +29,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Modules\GamesLibrary\Messages\" />
+    <Folder Include="Modules\GamesLibrary\Validators\" />
+  </ItemGroup>
+
 </Project>

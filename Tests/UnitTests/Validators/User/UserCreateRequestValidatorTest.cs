@@ -1,5 +1,5 @@
-﻿using fiap_fase1_tech_challenge.Messages;
-using fiap_fase1_tech_challenge.Validators.User;
+﻿using fiap_fase1_tech_challenge.Modules.Users.Messages;
+using fiap_fase1_tech_challenge.Modules.Users.Validators;
 using FluentAssertions;
 using FluentValidation.TestHelper;
 

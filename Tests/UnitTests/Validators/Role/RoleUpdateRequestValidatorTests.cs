@@ -1,6 +1,6 @@
-﻿using fiap_fase1_tech_challenge.DTOs.Role;
-using fiap_fase1_tech_challenge.Messages;
-using fiap_fase1_tech_challenge.Validators.Role;
+﻿using fiap_fase1_tech_challenge.Modules.Users.DTOs.Requests;
+using fiap_fase1_tech_challenge.Modules.Users.Messages;
+using fiap_fase1_tech_challenge.Modules.Users.Validators;
 using FluentValidation.TestHelper;
 
 namespace Tests.UnitTests.Validators.Role

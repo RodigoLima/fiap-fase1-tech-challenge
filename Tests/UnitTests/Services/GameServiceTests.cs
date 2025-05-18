@@ -1,13 +1,12 @@
-﻿using fiap_fase1_tech_challenge.DTOs.Game;
-using fiap_fase1_tech_challenge.Exceptions;
-using fiap_fase1_tech_challenge.Messages;
-using fiap_fase1_tech_challenge.Models;
-using fiap_fase1_tech_challenge.Repositories.Interfaces;
-using fiap_fase1_tech_challenge.Services;
+﻿using fiap_fase1_tech_challenge.Common.Exceptions;
+using fiap_fase1_tech_challenge.Modules.Games.DTOs.Requests;
+using fiap_fase1_tech_challenge.Modules.Games.Messages;
+using fiap_fase1_tech_challenge.Modules.Games.Models;
+using fiap_fase1_tech_challenge.Modules.Games.Repositories.Interfaces;
+using fiap_fase1_tech_challenge.Modules.Games.Services.Implementations;
 using fiap_fase1_tech_challenge.Test.Utils;
 using FluentAssertions;
 using Moq;
-using static Bogus.DataSets.Name;
 
 namespace fiap_fase1_tech_challenge.Test.UnitTests.Services
 {

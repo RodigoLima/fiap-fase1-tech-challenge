@@ -1,9 +1,10 @@
-﻿using fiap_fase1_tech_challenge.Exceptions;
-using fiap_fase1_tech_challenge.Messages;
-using fiap_fase1_tech_challenge.Models;
-using fiap_fase1_tech_challenge.Repositories.Interfaces;
-using fiap_fase1_tech_challenge.Services;
-using fiap_fase1_tech_challenge.Services.Interfaces;
+﻿using fiap_fase1_tech_challenge.Common.Exceptions;
+using fiap_fase1_tech_challenge.Common.Services.Interfaces;
+using fiap_fase1_tech_challenge.Modules.Users.Messages;
+using fiap_fase1_tech_challenge.Modules.Users.Models;
+using fiap_fase1_tech_challenge.Modules.Users.Repositories.Interfaces;
+using fiap_fase1_tech_challenge.Modules.Users.Services.Implementations;
+using fiap_fase1_tech_challenge.Modules.Users.Services.Interfaces;
 using fiap_fase1_tech_challenge.Test.Utils;
 using FluentAssertions;
 using Moq;
@@ -15,13 +16,13 @@ namespace fiap_fase1_tech_challenge.Test.UnitTests.Services
     {
         private readonly Mock<IUserRepository> _userRepository;
         private readonly Mock<IRoleService> _roleService;
-        private readonly Mock<IPasswordHasher> _passwordHasher;
+        private readonly Mock<IHasher> _passwordHasher;
         private readonly UserService _userService;
         public UserServiceTests()
         {
             _userRepository = new Mock<IUserRepository>();
             _roleService = new Mock<IRoleService>();
-            _passwordHasher = new Mock<IPasswordHasher>();
+            _passwordHasher = new Mock<IHasher>();
             _userService = new UserService(_userRepository.Object, _roleService.Object, _passwordHasher.Object);
         }
 

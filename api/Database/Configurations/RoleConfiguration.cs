@@ -1,4 +1,4 @@
-using fiap_fase1_tech_challenge.Models;
+using fiap_fase1_tech_challenge.Modules.Users.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

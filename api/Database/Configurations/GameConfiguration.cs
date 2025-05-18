@@ -1,4 +1,4 @@
-using fiap_fase1_tech_challenge.Models;
+using fiap_fase1_tech_challenge.Modules.Games.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +10,7 @@ namespace fiap_fase1_tech_challenge.Database.Configurations
         {
             builder.Property(g => g.Id).UseIdentityColumn();
             builder.Property(g => g.Name).IsRequired().HasMaxLength(50);
-            builder.Property(g => g.Description).HasMaxLength(200);
+            builder.Property(g => g.Description).HasMaxLength(500);
             builder.Property(g => g.Price).IsRequired();
             builder.Property(g => g.Genre).HasMaxLength(20).IsRequired();
             builder.Property(g => g.CreatedAt).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");

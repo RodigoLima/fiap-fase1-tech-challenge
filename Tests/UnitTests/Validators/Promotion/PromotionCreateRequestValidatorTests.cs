@@ -1,6 +1,6 @@
-﻿using fiap_fase1_tech_challenge.DTOs.Promotion;
-using fiap_fase1_tech_challenge.Messages;
-using fiap_fase1_tech_challenge.Validators.Promotion;
+﻿using fiap_fase1_tech_challenge.Modules.Promotions.DTOs.Requests;
+using fiap_fase1_tech_challenge.Modules.Promotions.Messages;
+using fiap_fase1_tech_challenge.Modules.Promotions.Validators;
 using FluentAssertions;
 using FluentValidation.TestHelper;
 

@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using fiap_fase1_tech_challenge.Models;
+using fiap_fase1_tech_challenge.Modules.Users.Models;
 
 namespace Tests.Utils
 {

@@ -1,5 +1,5 @@
-﻿using fiap_fase1_tech_challenge.Messages;
-using fiap_fase1_tech_challenge.Validators.Promotion;
+﻿using fiap_fase1_tech_challenge.Modules.Promotions.Messages;
+using fiap_fase1_tech_challenge.Modules.Promotions.Validators;
 using FluentValidation.TestHelper;
 
 namespace Tests.UnitTests.Validators.Promotion
