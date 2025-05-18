@@ -46,6 +46,8 @@ namespace fiap_fase1_tech_challenge.Extensions
                 options.FallbackPolicy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
                     .Build();
+
+                options.AddPolicy("Admin", p => p.RequireRole("Admin"));
             });
 
             return services;

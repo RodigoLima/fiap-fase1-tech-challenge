@@ -1,7 +1,9 @@
 using fiap_fase1_tech_challenge.Configurations;
 using fiap_fase1_tech_challenge.Extensions;
+using fiap_fase1_tech_challenge.Handlers;
 using fiap_fase1_tech_challenge.Middlewares;
 using fiap_fase1_tech_challenge.Validators;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -33,6 +35,7 @@ builder.Services.AddAuthorizationPolicies();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddValidators();
 builder.Services.ApplyMigrationsAndSeed();
+builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, AuthorizationResultHandler>();
 
 var app = builder.Build();
 

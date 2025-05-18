@@ -50,7 +50,7 @@ namespace fiap_fase1_tech_challenge.Middlewares
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Erro não tratado");
+                Log.Error(ex, ex.Message);
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 context.Response.ContentType = "application/json";
 

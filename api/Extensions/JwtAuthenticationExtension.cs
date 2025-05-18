@@ -1,4 +1,5 @@
 ﻿using fiap_fase1_tech_challenge.Configurations;
+using fiap_fase1_tech_challenge.Messages;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -9,13 +10,24 @@ public static class JwtAuthenticationExtension
 {
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
+        var serviceProvider = services.BuildServiceProvider();
+        var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger("JwtAuthentication");
+
         services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 
-        var jwt = configuration.GetSection("Jwt").Get<JwtSettings>()
-                  ?? throw new InvalidOperationException("JWT settings not configured");
+        var jwt = configuration.GetSection("Jwt").Get<JwtSettings>();
+        if(jwt == null)
+        {
+            logger.LogError(JwtMessages.Configuration.NotConfigured);
+            throw new InvalidOperationException(JwtMessages.Configuration.NotConfigured);
+        };
 
         if (string.IsNullOrWhiteSpace(jwt.Key))
-            throw new InvalidOperationException("Jwt:Key está ausente ou vazio no appsettings.json");
+        {
+            logger.LogError(JwtMessages.Configuration.InvalidKey);
+            throw new InvalidOperationException(JwtMessages.Configuration.InvalidKey);
+        }
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));
 

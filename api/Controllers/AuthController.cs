@@ -25,10 +25,7 @@ public class AuthController : ControllerBase
     {
         var user = await _userService.AuthenticateAsync(request.Email, request.Password);
 
-        if (user is null)
-            return Unauthorized("Credenciais inválidas");
-
-        var tokens = _authService.GenerateTokens(user.Id.ToString(), user.Email, user.Role.Name);
+        var tokens = _authService.GenerateTokens(user!.Id.ToString(), user.Email, user.Role.Name);
         return Ok(tokens);
     }
 
