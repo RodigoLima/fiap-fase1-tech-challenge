@@ -19,6 +19,7 @@ public class UserController : ControllerBase
         _validatorUpdate = validatorUpdate;
     }
 
+    [Authorize(Policy = "Admin")]
     [HttpGet]
     public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
 
