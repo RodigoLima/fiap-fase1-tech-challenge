@@ -2,6 +2,7 @@
 using fiap_fase1_tech_challenge.Modules.Users.DTOs.Requests;
 using fiap_fase1_tech_challenge.Modules.Users.Services.Interfaces;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -29,6 +30,7 @@ public class RoleController : ControllerBase
         return Ok(role);
     }
 
+    [Authorize(Policy = "Admin")]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] RoleCreateRequest role)
     {
@@ -38,6 +40,7 @@ public class RoleController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
+    [Authorize(Policy = "Admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] RoleUpdateRequest role)
     {
@@ -48,6 +51,7 @@ public class RoleController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Policy = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
